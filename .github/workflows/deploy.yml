@@ -13,24 +13,13 @@ jobs:
 
     steps:
 
+    # modules не указан — собирается сам пак bog/demo, каталог демок.
+    # Сами демки приезжают из своих репозиториев по include в demo.meta.tree.
     - uses: hyoo-ru/mam_build@master2
       with:
         package: 'bog/demo'
-        modules: 'app1 app2 app3'
 
     - uses: hyoo-ru/gh-deploy@v4.4.1
       if: github.ref == 'refs/heads/main'
       with:
-        folder: 'bog/demo/app1/-'
-
-    - uses: hyoo-ru/gh-deploy@v4.4.1
-      if: github.ref == 'refs/heads/main'
-      with:
-        folder: 'bog/demo/app2/-'
-        target-folder: 'app2'
-
-    - uses: hyoo-ru/gh-deploy@v4.4.1
-      if: github.ref == 'refs/heads/main'
-      with:
-        folder: 'bog/demo/app3/-'
-        target-folder: 'app3'
+        folder: 'bog/demo/-'

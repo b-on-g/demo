@@ -1,0 +1,11 @@
+include \/mol/app/demo
+
+include \/bog/theme/demo
+include \/bog/qr/demo
+include \/bog/feedback/demo
+include \/bog/feedback2/demo
+include \/bog/langleak/demo
+include \/bog/wikilive/button/demo
+include \/bog/wikilive/logo/demo
+
+include \/raggu/web/front/explorer/forcegraph/demo

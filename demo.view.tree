@@ -1,0 +1,3 @@
+$bog_demo $mol_app_demo
+	menu_title \BOG Components
+	sources_uri \https://github.com/b-on-g/
