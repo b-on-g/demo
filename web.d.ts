@@ -632,7 +632,7 @@ declare namespace $ {
      * Theme css variables
      * @see https://mol.hyoo.ru/#!section=demos/demo=mol_textarea_demo
      */
-    const $mol_theme: Record<"image" | "line" | "text" | "field" | "current" | "hover" | "hue" | "back" | "card" | "special" | "control" | "shade" | "focus" | "spirit" | "hue_spread", $mol_style_func<"var", unknown>>;
+    const $mol_theme: Record<"image" | "line" | "text" | "field" | "current" | "focus" | "hover" | "hue" | "back" | "card" | "special" | "control" | "shade" | "spirit" | "hue_spread", $mol_style_func<"var", unknown>>;
 }
 
 declare namespace $ {
@@ -643,7 +643,7 @@ declare namespace $ {
      * Gap in CSS
      * @see https://page.hyoo.ru/#!=msdb74_bm7nsq
      */
-    let $mol_gap: Record<"text" | "space" | "block" | "blur" | "page" | "round" | "emoji", $mol_style_func<"var", unknown>>;
+    let $mol_gap: Record<"text" | "block" | "blur" | "page" | "space" | "round" | "emoji", $mol_style_func<"var", unknown>>;
 }
 
 declare namespace $ {
@@ -1699,7 +1699,7 @@ declare namespace $ {
      * Z-index values for layers
      * https://page.hyoo.ru/#!=xthcpx_wqmiba
      */
-    let $mol_layer: Record<"hover" | "float" | "focus" | "speck" | "popup", $mol_style_func<"var", unknown>>;
+    let $mol_layer: Record<"focus" | "hover" | "float" | "speck" | "popup", $mol_style_func<"var", unknown>>;
 }
 
 declare namespace $ {
@@ -1928,11 +1928,30 @@ declare namespace $.$$ {
 
 declare namespace $ {
 
-	export class $mol_hotkey extends $mol_plugin {
+	export class $mol_hotkey2 extends $mol_plugin {
 		keydown( next?: any ): any
 		event( ): ({ 
-			keydown( next?: ReturnType< $mol_hotkey['keydown'] > ): ReturnType< $mol_hotkey['keydown'] >,
+			keydown( next?: ReturnType< $mol_hotkey2['keydown'] > ): ReturnType< $mol_hotkey2['keydown'] >,
 		})  & ReturnType< $mol_plugin['event'] >
+		action( ): Record<string, any>
+	}
+	
+}
+
+//# sourceMappingURL=hotkey2.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * Plugin which adds handlers for keyboard keys.
+     * @see [mol_keyboard_code](../keyboard/code/code.ts)
+     */
+    class $mol_hotkey2 extends $.$mol_hotkey2 {
+        keydown(event?: KeyboardEvent): void;
+    }
+}
+
+declare namespace $ {
+
+	export class $mol_hotkey extends $mol_hotkey2 {
 		key( ): Record<string, any>
 		mod_ctrl( ): boolean
 		mod_alt( ): boolean
@@ -1945,11 +1964,13 @@ declare namespace $ {
 declare namespace $.$$ {
     /**
      * Plugin which adds handlers for keyboard keys.
+     * @deprecated Use $mol_hotkey2
      * @see [mol_keyboard_code](../keyboard/code/code.ts)
      */
     class $mol_hotkey extends $.$mol_hotkey {
-        key(): { [key in keyof typeof $mol_keyboard_code]?: (event: KeyboardEvent) => void; };
-        keydown(event?: KeyboardEvent): void;
+        action(): {
+            [k: string]: any;
+        };
     }
 }
 
@@ -2436,6 +2457,7 @@ declare namespace $ {
 		ReturnType< $mol_follower['Sub'] >
 	>
 	export class $mol_pop extends $mol_view {
+		align( ): string
 		bubble( ): any
 		Anchor( ): any
 		bubble_offset( ): readonly(number)[]
@@ -2447,7 +2469,8 @@ declare namespace $ {
 		showed( next?: boolean ): boolean
 		align_vert( ): string
 		align_hor( ): string
-		align( ): string
+		direction( ): string
+		align_enriched( ): ReturnType< $mol_pop['align'] >
 		prefer( ): string
 		auto( ): readonly(any)[]
 		sub( ): readonly(any)[]
@@ -2482,6 +2505,8 @@ declare namespace $.$$ {
         align(): string;
         align_vert(): "suspense" | "top" | "bottom";
         align_hor(): "suspense" | "left" | "right";
+        direction(): "ltr" | "rtl";
+        align_enriched(): string;
         bubble_offset(): number[];
         bubble_align(): number[];
         bubble(): void;
@@ -2602,6 +2627,7 @@ declare namespace $.$$ {
      */
     class $mol_string extends $.$mol_string {
         event_change(next?: Event): void;
+        value_changed(next?: string): string;
         error_report(): void;
         hint_visible(): string;
         disabled(): boolean;
@@ -4941,23 +4967,23 @@ declare namespace $ {
 		,
 		ReturnType< $mol_text['text'] >
 	>
-	type $mol_text__text_mol_text_2 = $mol_type_enforce<
-		ReturnType< $mol_text['spoiler_content'] >
+	type $mol_text__highlight_mol_text_2 = $mol_type_enforce<
+		ReturnType< $mol_text['highlight'] >
 		,
-		ReturnType< $mol_text['text'] >
+		ReturnType< $mol_text['highlight'] >
 	>
-	type $mol_paragraph__sub_mol_text_3 = $mol_type_enforce<
-		ReturnType< $mol_text['block_content'] >
-		,
-		ReturnType< $mol_paragraph['sub'] >
-	>
-	type $mol_text__uri_resolve_mol_text_4 = $mol_type_enforce<
+	type $mol_text__uri_resolve_mol_text_3 = $mol_type_enforce<
 		ReturnType< $mol_text['uri_resolve'] >
 		,
 		ReturnType< $mol_text['uri_resolve'] >
+	>
+	type $mol_text__code_sidebar_showed_mol_text_4 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
+		,
+		ReturnType< $mol_text['code_sidebar_showed'] >
 	>
 	type $mol_text__text_mol_text_5 = $mol_type_enforce<
-		ReturnType< $mol_text['quote_text'] >
+		ReturnType< $mol_text['spoiler_content'] >
 		,
 		ReturnType< $mol_text['text'] >
 	>
@@ -4966,237 +4992,287 @@ declare namespace $ {
 		,
 		ReturnType< $mol_text['highlight'] >
 	>
-	type $mol_text__auto_scroll_mol_text_7 = $mol_type_enforce<
+	type $mol_text__uri_resolve_mol_text_7 = $mol_type_enforce<
+		ReturnType< $mol_text['uri_resolve'] >
+		,
+		ReturnType< $mol_text['uri_resolve'] >
+	>
+	type $mol_text__code_sidebar_showed_mol_text_8 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
+		,
+		ReturnType< $mol_text['code_sidebar_showed'] >
+	>
+	type $mol_paragraph__sub_mol_text_9 = $mol_type_enforce<
+		ReturnType< $mol_text['block_content'] >
+		,
+		ReturnType< $mol_paragraph['sub'] >
+	>
+	type $mol_text__text_mol_text_10 = $mol_type_enforce<
+		ReturnType< $mol_text['quote_text'] >
+		,
+		ReturnType< $mol_text['text'] >
+	>
+	type $mol_text__auto_scroll_mol_text_11 = $mol_type_enforce<
 		any
 		,
 		ReturnType< $mol_text['auto_scroll'] >
 	>
-	type $mol_text_list__uri_resolve_mol_text_8 = $mol_type_enforce<
+	type $mol_text__highlight_mol_text_12 = $mol_type_enforce<
+		ReturnType< $mol_text['highlight'] >
+		,
+		ReturnType< $mol_text['highlight'] >
+	>
+	type $mol_text__uri_resolve_mol_text_13 = $mol_type_enforce<
 		ReturnType< $mol_text['uri_resolve'] >
 		,
-		ReturnType< $mol_text_list['uri_resolve'] >
+		ReturnType< $mol_text['uri_resolve'] >
 	>
-	type $mol_text_list__type_mol_text_9 = $mol_type_enforce<
+	type $mol_text__code_sidebar_showed_mol_text_14 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
+		,
+		ReturnType< $mol_text['code_sidebar_showed'] >
+	>
+	type $mol_text_list__type_mol_text_15 = $mol_type_enforce<
 		ReturnType< $mol_text['list_type'] >
 		,
 		ReturnType< $mol_text_list['type'] >
 	>
-	type $mol_text_list__text_mol_text_10 = $mol_type_enforce<
+	type $mol_text_list__text_mol_text_16 = $mol_type_enforce<
 		ReturnType< $mol_text['list_text'] >
 		,
 		ReturnType< $mol_text_list['text'] >
 	>
-	type $mol_text_list__highlight_mol_text_11 = $mol_type_enforce<
+	type $mol_text_list__highlight_mol_text_17 = $mol_type_enforce<
 		ReturnType< $mol_text['highlight'] >
 		,
 		ReturnType< $mol_text_list['highlight'] >
 	>
-	type $mol_text_header__minimal_height_mol_text_12 = $mol_type_enforce<
+	type $mol_text_list__uri_resolve_mol_text_18 = $mol_type_enforce<
+		ReturnType< $mol_text['uri_resolve'] >
+		,
+		ReturnType< $mol_text_list['uri_resolve'] >
+	>
+	type $mol_text_list__code_sidebar_showed_mol_text_19 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
+		,
+		ReturnType< $mol_text_list['code_sidebar_showed'] >
+	>
+	type $mol_text_header__minimal_height_mol_text_20 = $mol_type_enforce<
 		number
 		,
 		ReturnType< $mol_text_header['minimal_height'] >
 	>
-	type $mol_text_header__level_mol_text_13 = $mol_type_enforce<
+	type $mol_text_header__level_mol_text_21 = $mol_type_enforce<
 		ReturnType< $mol_text['header_level'] >
 		,
 		ReturnType< $mol_text_header['level'] >
 	>
-	type $mol_text_header__content_mol_text_14 = $mol_type_enforce<
+	type $mol_text_header__content_mol_text_22 = $mol_type_enforce<
 		ReturnType< $mol_text['block_content'] >
 		,
 		ReturnType< $mol_text_header['content'] >
 	>
-	type $mol_text_header__arg_mol_text_15 = $mol_type_enforce<
+	type $mol_text_header__arg_mol_text_23 = $mol_type_enforce<
 		ReturnType< $mol_text['header_arg'] >
 		,
 		ReturnType< $mol_text_header['arg'] >
 	>
-	type $mol_text_code__text_mol_text_16 = $mol_type_enforce<
+	type $mol_text_code__text_mol_text_24 = $mol_type_enforce<
 		ReturnType< $mol_text['pre_text'] >
 		,
 		ReturnType< $mol_text_code['text'] >
 	>
-	type $mol_text_code__row_themes_mol_text_17 = $mol_type_enforce<
+	type $mol_text_code__row_themes_mol_text_25 = $mol_type_enforce<
 		ReturnType< $mol_text['pre_themes'] >
 		,
 		ReturnType< $mol_text_code['row_themes'] >
 	>
-	type $mol_text_code__highlight_mol_text_18 = $mol_type_enforce<
+	type $mol_text_code__highlight_mol_text_26 = $mol_type_enforce<
 		ReturnType< $mol_text['highlight'] >
 		,
 		ReturnType< $mol_text_code['highlight'] >
 	>
-	type $mol_text_code__uri_resolve_mol_text_19 = $mol_type_enforce<
+	type $mol_text_code__uri_resolve_mol_text_27 = $mol_type_enforce<
 		ReturnType< $mol_text['uri_resolve'] >
 		,
 		ReturnType< $mol_text_code['uri_resolve'] >
 	>
-	type $mol_text_code__sidebar_showed_mol_text_20 = $mol_type_enforce<
-		ReturnType< $mol_text['pre_sidebar_showed'] >
+	type $mol_text_code__sidebar_showed_mol_text_28 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
 		,
 		ReturnType< $mol_text_code['sidebar_showed'] >
 	>
-	type $mol_view__dom_name_mol_text_21 = $mol_type_enforce<
+	type $mol_view__dom_name_mol_text_29 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_view['dom_name'] >
 	>
-	type $mol_grid__head_cells_mol_text_22 = $mol_type_enforce<
+	type $mol_grid__head_cells_mol_text_30 = $mol_type_enforce<
 		ReturnType< $mol_text['table_head_cells'] >
 		,
 		ReturnType< $mol_grid['head_cells'] >
 	>
-	type $mol_grid__rows_mol_text_23 = $mol_type_enforce<
+	type $mol_grid__rows_mol_text_31 = $mol_type_enforce<
 		ReturnType< $mol_text['table_rows'] >
 		,
 		ReturnType< $mol_grid['rows'] >
 	>
-	type $mol_grid_row__cells_mol_text_24 = $mol_type_enforce<
+	type $mol_grid_row__cells_mol_text_32 = $mol_type_enforce<
 		ReturnType< $mol_text['table_cells'] >
 		,
 		ReturnType< $mol_grid_row['cells'] >
 	>
-	type $mol_text__auto_scroll_mol_text_25 = $mol_type_enforce<
+	type $mol_text__auto_scroll_mol_text_33 = $mol_type_enforce<
 		any
 		,
 		ReturnType< $mol_text['auto_scroll'] >
 	>
-	type $mol_text__highlight_mol_text_26 = $mol_type_enforce<
-		ReturnType< $mol_text['highlight'] >
-		,
-		ReturnType< $mol_text['highlight'] >
-	>
-	type $mol_text__uri_resolve_mol_text_27 = $mol_type_enforce<
-		ReturnType< $mol_text['uri_resolve'] >
-		,
-		ReturnType< $mol_text['uri_resolve'] >
-	>
-	type $mol_text__text_mol_text_28 = $mol_type_enforce<
+	type $mol_text__text_mol_text_34 = $mol_type_enforce<
 		ReturnType< $mol_text['table_cell_text'] >
 		,
 		ReturnType< $mol_text['text'] >
 	>
-	type $mol_grid__rows_mol_text_29 = $mol_type_enforce<
+	type $mol_text__highlight_mol_text_35 = $mol_type_enforce<
+		ReturnType< $mol_text['highlight'] >
+		,
+		ReturnType< $mol_text['highlight'] >
+	>
+	type $mol_text__uri_resolve_mol_text_36 = $mol_type_enforce<
+		ReturnType< $mol_text['uri_resolve'] >
+		,
+		ReturnType< $mol_text['uri_resolve'] >
+	>
+	type $mol_text__code_sidebar_showed_mol_text_37 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
+		,
+		ReturnType< $mol_text['code_sidebar_showed'] >
+	>
+	type $mol_grid__rows_mol_text_38 = $mol_type_enforce<
 		ReturnType< $mol_text['grid_rows'] >
 		,
 		ReturnType< $mol_grid['rows'] >
 	>
-	type $mol_grid_row__cells_mol_text_30 = $mol_type_enforce<
+	type $mol_grid_row__cells_mol_text_39 = $mol_type_enforce<
 		ReturnType< $mol_text['grid_cells'] >
 		,
 		ReturnType< $mol_grid_row['cells'] >
 	>
-	type $mol_text__auto_scroll_mol_text_31 = $mol_type_enforce<
+	type $mol_text__auto_scroll_mol_text_40 = $mol_type_enforce<
 		any
 		,
 		ReturnType< $mol_text['auto_scroll'] >
 	>
-	type $mol_text__highlight_mol_text_32 = $mol_type_enforce<
-		ReturnType< $mol_text['highlight'] >
-		,
-		ReturnType< $mol_text['highlight'] >
-	>
-	type $mol_text__uri_resolve_mol_text_33 = $mol_type_enforce<
-		ReturnType< $mol_text['uri_resolve'] >
-		,
-		ReturnType< $mol_text['uri_resolve'] >
-	>
-	type $mol_text__text_mol_text_34 = $mol_type_enforce<
+	type $mol_text__text_mol_text_41 = $mol_type_enforce<
 		ReturnType< $mol_text['grid_cell_text'] >
 		,
 		ReturnType< $mol_text['text'] >
 	>
-	type $mol_dimmer__dom_name_mol_text_35 = $mol_type_enforce<
+	type $mol_text__highlight_mol_text_42 = $mol_type_enforce<
+		ReturnType< $mol_text['highlight'] >
+		,
+		ReturnType< $mol_text['highlight'] >
+	>
+	type $mol_text__uri_resolve_mol_text_43 = $mol_type_enforce<
+		ReturnType< $mol_text['uri_resolve'] >
+		,
+		ReturnType< $mol_text['uri_resolve'] >
+	>
+	type $mol_text__code_sidebar_showed_mol_text_44 = $mol_type_enforce<
+		ReturnType< $mol_text['code_sidebar_showed'] >
+		,
+		ReturnType< $mol_text['code_sidebar_showed'] >
+	>
+	type $mol_dimmer__dom_name_mol_text_45 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_dimmer['dom_name'] >
 	>
-	type $mol_dimmer__needle_mol_text_36 = $mol_type_enforce<
+	type $mol_dimmer__needle_mol_text_46 = $mol_type_enforce<
 		ReturnType< $mol_text['highlight'] >
 		,
 		ReturnType< $mol_dimmer['needle'] >
 	>
-	type $mol_dimmer__haystack_mol_text_37 = $mol_type_enforce<
+	type $mol_dimmer__haystack_mol_text_47 = $mol_type_enforce<
 		ReturnType< $mol_text['line_text'] >
 		,
 		ReturnType< $mol_dimmer['haystack'] >
 	>
-	type $mol_text_span__dom_name_mol_text_38 = $mol_type_enforce<
+	type $mol_text_span__dom_name_mol_text_48 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_text_span['dom_name'] >
 	>
-	type $mol_text_span__type_mol_text_39 = $mol_type_enforce<
+	type $mol_text_span__type_mol_text_49 = $mol_type_enforce<
 		ReturnType< $mol_text['line_type'] >
 		,
 		ReturnType< $mol_text_span['type'] >
 	>
-	type $mol_text_span__sub_mol_text_40 = $mol_type_enforce<
+	type $mol_text_span__sub_mol_text_50 = $mol_type_enforce<
 		ReturnType< $mol_text['line_content'] >
 		,
 		ReturnType< $mol_text_span['sub'] >
 	>
-	type $mol_text_code_line__numb_showed_mol_text_41 = $mol_type_enforce<
+	type $mol_text_code_line__numb_showed_mol_text_51 = $mol_type_enforce<
 		boolean
 		,
 		ReturnType< $mol_text_code_line['numb_showed'] >
 	>
-	type $mol_text_code_line__highlight_mol_text_42 = $mol_type_enforce<
+	type $mol_text_code_line__highlight_mol_text_52 = $mol_type_enforce<
 		ReturnType< $mol_text['highlight'] >
 		,
 		ReturnType< $mol_text_code_line['highlight'] >
 	>
-	type $mol_text_code_line__text_mol_text_43 = $mol_type_enforce<
+	type $mol_text_code_line__text_mol_text_53 = $mol_type_enforce<
 		ReturnType< $mol_text['line_text'] >
 		,
 		ReturnType< $mol_text_code_line['text'] >
 	>
-	type $mol_text_code_line__uri_resolve_mol_text_44 = $mol_type_enforce<
+	type $mol_text_code_line__uri_resolve_mol_text_54 = $mol_type_enforce<
 		ReturnType< $mol_text['uri_resolve'] >
 		,
 		ReturnType< $mol_text_code_line['uri_resolve'] >
 	>
-	type $mol_text_code_line__syntax_mol_text_45 = $mol_type_enforce<
+	type $mol_text_code_line__syntax_mol_text_55 = $mol_type_enforce<
 		ReturnType< $mol_text['code_syntax'] >
 		,
 		ReturnType< $mol_text_code_line['syntax'] >
 	>
-	type $mol_link_iconed__uri_mol_text_46 = $mol_type_enforce<
+	type $mol_link_iconed__uri_mol_text_56 = $mol_type_enforce<
 		ReturnType< $mol_text['link_uri'] >
 		,
 		ReturnType< $mol_link_iconed['uri'] >
 	>
-	type $mol_link_iconed__content_mol_text_47 = $mol_type_enforce<
+	type $mol_link_iconed__content_mol_text_57 = $mol_type_enforce<
 		ReturnType< $mol_text['line_content'] >
 		,
 		ReturnType< $mol_link_iconed['content'] >
 	>
-	type $mol_link_iconed__uri_mol_text_48 = $mol_type_enforce<
+	type $mol_link_iconed__uri_mol_text_58 = $mol_type_enforce<
 		ReturnType< $mol_text['link_uri'] >
 		,
 		ReturnType< $mol_link_iconed['uri'] >
 	>
-	type $mol_link_iconed__content_mol_text_49 = $mol_type_enforce<
+	type $mol_link_iconed__content_mol_text_59 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_link_iconed['content'] >
 	>
-	type $mol_embed_any__uri_mol_text_50 = $mol_type_enforce<
+	type $mol_embed_any__uri_mol_text_60 = $mol_type_enforce<
 		ReturnType< $mol_text['link_uri'] >
 		,
 		ReturnType< $mol_embed_any['uri'] >
 	>
-	type $mol_embed_any__title_mol_text_51 = $mol_type_enforce<
+	type $mol_embed_any__title_mol_text_61 = $mol_type_enforce<
 		ReturnType< $mol_text['line_text'] >
 		,
 		ReturnType< $mol_embed_any['title'] >
 	>
-	type $mol_expander__label_mol_text_52 = $mol_type_enforce<
+	type $mol_expander__label_mol_text_62 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_expander['label'] >
 	>
-	type $mol_expander__content_mol_text_53 = $mol_type_enforce<
+	type $mol_expander__content_mol_text_63 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_expander['content'] >
@@ -5204,17 +5280,16 @@ declare namespace $ {
 	export class $mol_text extends $mol_list {
 		auto_scroll( ): any
 		block_content( id: any): readonly(any)[]
-		uri_resolve( id: any): string
 		quote_text( id: any): string
 		highlight( ): string
+		uri_resolve( id: any): string
+		code_sidebar_showed( ): boolean
 		list_type( id: any): string
 		list_text( id: any): string
 		header_level( id: any): number
 		header_arg( id: any): Record<string, any>
 		pre_text( id: any): string
 		pre_themes( id: any): readonly(string)[]
-		code_sidebar_showed( ): boolean
-		pre_sidebar_showed( ): ReturnType< $mol_text['code_sidebar_showed'] >
 		table_head_cells( id: any): readonly(any)[]
 		table_rows( id: any): readonly(any)[]
 		table_cells( id: any): readonly(any)[]
@@ -5888,7 +5963,7 @@ declare namespace $ {
      * Theme css variables
      * @see https://mol.hyoo.ru/#!section=demos/demo=mol_textarea_demo
      */
-    const $bog_theme: Record<"image" | "line" | "text" | "field" | "current" | "hover" | "background" | "back" | "card" | "special" | "control" | "shade" | "focus" | "spirit", $mol_style_func<"var", unknown>>;
+    const $bog_theme: Record<"image" | "line" | "text" | "field" | "current" | "focus" | "hover" | "background" | "back" | "card" | "special" | "control" | "shade" | "spirit", $mol_style_func<"var", unknown>>;
     /**
      * Available theme names.
      * Add new theme to theme.css and add its name here.
@@ -5937,6 +6012,7 @@ declare namespace $.$$ {
         click_step(next?: number): number;
         /** 3-click cycle: opposite → back → system. */
         mode_next(): void;
+        system_light(): boolean;
         is_light_now(): any;
         theme_index(next?: number): number;
         system_theme_index(): number;
@@ -6074,32 +6150,37 @@ declare namespace $ {
 		,
 		ReturnType< $mol_button_minor['event_click'] >
 	>
-	type $mol_button_minor__sub_mol_select_10 = $mol_type_enforce<
+	type $mol_button_minor__hint_mol_select_10 = $mol_type_enforce<
+		ReturnType< $mol_select['option_hint'] >
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__sub_mol_select_11 = $mol_type_enforce<
 		ReturnType< $mol_select['option_content'] >
 		,
 		ReturnType< $mol_button_minor['sub'] >
 	>
-	type $mol_view__sub_mol_select_11 = $mol_type_enforce<
+	type $mol_view__sub_mol_select_12 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_view['sub'] >
 	>
-	type $mol_search__query_mol_select_12 = $mol_type_enforce<
+	type $mol_search__query_mol_select_13 = $mol_type_enforce<
 		ReturnType< $mol_select['filter_pattern'] >
 		,
 		ReturnType< $mol_search['query'] >
 	>
-	type $mol_search__hint_mol_select_13 = $mol_type_enforce<
+	type $mol_search__hint_mol_select_14 = $mol_type_enforce<
 		ReturnType< $mol_select['filter_hint'] >
 		,
 		ReturnType< $mol_search['hint'] >
 	>
-	type $mol_search__submit_mol_select_14 = $mol_type_enforce<
+	type $mol_search__submit_mol_select_15 = $mol_type_enforce<
 		ReturnType< $mol_select['submit'] >
 		,
 		ReturnType< $mol_search['submit'] >
 	>
-	type $mol_search__enabled_mol_select_15 = $mol_type_enforce<
+	type $mol_search__enabled_mol_select_16 = $mol_type_enforce<
 		ReturnType< $mol_select['enabled'] >
 		,
 		ReturnType< $mol_search['enabled'] >
@@ -6107,6 +6188,7 @@ declare namespace $ {
 	export class $mol_select extends $mol_pick {
 		enabled( ): boolean
 		event_select( id: any, next?: any ): any
+		option_hint( id: any): any
 		option_label( id: any): string
 		filter_pattern( next?: string ): string
 		Option_label( id: any): $mol_dimmer
@@ -6149,6 +6231,7 @@ declare namespace $.$$ {
         options(): readonly string[];
         options_filtered(): readonly string[];
         option_label(id: string): any;
+        option_hint(id: string): string;
         option_rows(): $mol_button_minor[];
         option_focused(component?: $mol_view): $mol_view | $.$mol_search | null;
         event_select(id: string, event?: MouseEvent): void;
@@ -6473,22 +6556,49 @@ declare namespace $.$$ {
 
 declare namespace $ {
 
-	export class $mol_icon_chevron_left extends $mol_icon {
+	export class $mol_icon_menu extends $mol_icon {
 		path( ): string
 	}
 	
 }
 
-//# sourceMappingURL=left.view.tree.d.ts.map
+//# sourceMappingURL=menu.view.tree.d.ts.map
 declare namespace $ {
 
-	export class $mol_icon_chevron_right extends $mol_icon {
+	export class $mol_icon_menu_down extends $mol_icon {
 		path( ): string
 	}
 	
 }
 
-//# sourceMappingURL=right.view.tree.d.ts.map
+//# sourceMappingURL=down.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_menu_down_outline extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=outline.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_menu_up extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=up.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_menu_up_outline extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=outline.view.tree.d.ts.map
 declare namespace $ {
 }
 
@@ -6504,62 +6614,67 @@ declare namespace $ {
 		,
 		ReturnType< $mol_hotkey['key'] >
 	>
-	type $mol_button_minor__event_click_mol_number_2 = $mol_type_enforce<
-		ReturnType< $mol_number['event_dec'] >
-		,
-		ReturnType< $mol_button_minor['event_click'] >
-	>
-	type $mol_button_minor__enabled_mol_number_3 = $mol_type_enforce<
-		ReturnType< $mol_number['dec_enabled'] >
-		,
-		ReturnType< $mol_button_minor['enabled'] >
-	>
-	type $mol_button_minor__sub_mol_number_4 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_button_minor['sub'] >
-	>
-	type $mol_string__type_mol_number_5 = $mol_type_enforce<
+	type $mol_string__type_mol_number_2 = $mol_type_enforce<
 		ReturnType< $mol_number['type'] >
 		,
 		ReturnType< $mol_string['type'] >
 	>
-	type $mol_string__keyboard_mol_number_6 = $mol_type_enforce<
+	type $mol_string__keyboard_mol_number_3 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_string['keyboard'] >
 	>
-	type $mol_string__value_mol_number_7 = $mol_type_enforce<
+	type $mol_string__value_mol_number_4 = $mol_type_enforce<
 		ReturnType< $mol_number['value_string'] >
 		,
 		ReturnType< $mol_string['value'] >
 	>
-	type $mol_string__hint_mol_number_8 = $mol_type_enforce<
+	type $mol_string__hint_mol_number_5 = $mol_type_enforce<
 		ReturnType< $mol_number['hint'] >
 		,
 		ReturnType< $mol_string['hint'] >
 	>
-	type $mol_string__enabled_mol_number_9 = $mol_type_enforce<
+	type $mol_string__enabled_mol_number_6 = $mol_type_enforce<
 		ReturnType< $mol_number['string_enabled'] >
 		,
 		ReturnType< $mol_string['enabled'] >
 	>
-	type $mol_string__submit_mol_number_10 = $mol_type_enforce<
+	type $mol_string__submit_mol_number_7 = $mol_type_enforce<
 		ReturnType< $mol_number['submit'] >
 		,
 		ReturnType< $mol_string['submit'] >
 	>
-	type $mol_button_minor__event_click_mol_number_11 = $mol_type_enforce<
+	type $mol_string__selection_mol_number_8 = $mol_type_enforce<
+		ReturnType< $mol_number['selection'] >
+		,
+		ReturnType< $mol_string['selection'] >
+	>
+	type $mol_button_minor__event_click_mol_number_9 = $mol_type_enforce<
+		ReturnType< $mol_number['event_dec'] >
+		,
+		ReturnType< $mol_button_minor['event_click'] >
+	>
+	type $mol_button_minor__enabled_mol_number_10 = $mol_type_enforce<
+		ReturnType< $mol_number['dec_enabled'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__sub_mol_number_11 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__event_click_mol_number_12 = $mol_type_enforce<
 		ReturnType< $mol_number['event_inc'] >
 		,
 		ReturnType< $mol_button_minor['event_click'] >
 	>
-	type $mol_button_minor__enabled_mol_number_12 = $mol_type_enforce<
+	type $mol_button_minor__enabled_mol_number_13 = $mol_type_enforce<
 		ReturnType< $mol_number['inc_enabled'] >
 		,
 		ReturnType< $mol_button_minor['enabled'] >
 	>
-	type $mol_button_minor__sub_mol_number_13 = $mol_type_enforce<
+	type $mol_button_minor__sub_mol_number_14 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_button_minor['sub'] >
@@ -6571,17 +6686,18 @@ declare namespace $ {
 		event_dec_boost( next?: any ): any
 		event_inc_boost( next?: any ): any
 		Hotkey( ): $mol_hotkey
-		dec_enabled( ): ReturnType< $mol_number['enabled'] >
-		dec_icon( ): $mol_icon_chevron_left
-		Dec( ): $mol_button_minor
 		type( ): string
 		value_string( next?: string ): string
 		hint( ): string
 		string_enabled( ): ReturnType< $mol_number['enabled'] >
 		submit( next?: any ): any
+		selection( next?: readonly(number)[] ): readonly(number)[]
 		String( ): $mol_string
+		dec_enabled( ): ReturnType< $mol_number['enabled'] >
+		dec_icon( ): $mol_icon_menu_down_outline
+		Dec( ): $mol_button_minor
 		inc_enabled( ): ReturnType< $mol_number['enabled'] >
-		inc_icon( ): $mol_icon_chevron_right
+		inc_icon( ): $mol_icon_menu_up_outline
 		Inc( ): $mol_button_minor
 		precision_view( ): ReturnType< $mol_number['precision'] >
 		precision_change( ): ReturnType< $mol_number['precision'] >
@@ -6603,8 +6719,10 @@ declare namespace $.$$ {
      * @see https://mol.hyoo.ru/#!section=demos/demo=mol_number_demo
      */
     class $mol_number extends $.$mol_number {
+        sub(): ($.$mol_string | $mol_button_minor)[];
         value_limited(val?: number): number;
         event_dec(next?: Event): void;
+        precision_change(): number;
         event_inc(next?: Event): void;
         event_dec_boost(next?: Event): void;
         event_inc_boost(next?: Event): void;
@@ -6626,6 +6744,618 @@ declare namespace $ {
 }
 
 //# sourceMappingURL=row.view.tree.d.ts.map
+declare namespace $ {
+    class $mol_vector<Value, Length extends number> extends Array<Value> {
+        get length(): Length;
+        constructor(...values: Value[] & {
+            length: Length;
+        });
+        map<Res>(convert: (value: Value, index: number, array: this) => Res, self?: any): $mol_vector<Res, Length>;
+        merged<Patch>(patches: readonly Patch[] & {
+            length: Length;
+        }, combine: (value: Value, patch: Patch) => Value): this;
+        limited(this: $mol_vector<number, Length>, limits: readonly (readonly [number, number])[] & {
+            length: Length;
+        }): this;
+        added0(this: $mol_vector<number, Length>, diff: number): this;
+        added1(this: $mol_vector<number, Length>, diff: readonly number[] & {
+            length: Length;
+        }): this;
+        substracted1(this: $mol_vector<number, Length>, diff: readonly number[] & {
+            length: Length;
+        }): this;
+        multed0(this: $mol_vector<number, Length>, mult: number): this;
+        multed1(this: $mol_vector<number, Length>, mults: readonly number[] & {
+            length: Length;
+        }): this;
+        divided1(this: $mol_vector<number, Length>, mults: readonly number[] & {
+            length: Length;
+        }): this;
+        powered0(this: $mol_vector<number, Length>, mult: number): this;
+        expanded1(this: $mol_vector<$mol_vector_range<number>, Length>, point: readonly number[] & {
+            length: Length;
+        }): this;
+        expanded2(this: $mol_vector<$mol_vector_range<number>, Length>, point: readonly (readonly [number, number])[] & {
+            length: Length;
+        }): this;
+        center<Item extends $mol_vector<number, number>>(this: $mol_vector<Item, Length>): Item;
+        distance(this: $mol_vector<$mol_vector<number, number>, Length>): number;
+        transponed(this: $mol_vector<$mol_vector<number, number>, Length>): $mol_vector<$mol_vector<number, Length>, typeof this[0]['length']>;
+        get x(): Value;
+        set x(next: Value);
+        get y(): Value;
+        set y(next: Value);
+        get z(): Value;
+        set z(next: Value);
+    }
+    class $mol_vector_1d<Value> extends $mol_vector<Value, 1> {
+    }
+    class $mol_vector_2d<Value> extends $mol_vector<Value, 2> {
+    }
+    class $mol_vector_3d<Value> extends $mol_vector<Value, 3> {
+    }
+    class $mol_vector_range<Value> extends $mol_vector<Value, 2> {
+        0: Value;
+        1: Value;
+        constructor(min: Value, max?: Value);
+        get min(): Value;
+        set min(next: Value);
+        get max(): Value;
+        set max(next: Value);
+        get inversed(): $mol_vector_range<Value>;
+        expanded0(value: Value): $mol_vector_range<Value>;
+    }
+    let $mol_vector_range_full: $mol_vector_range<number>;
+    class $mol_vector_matrix<Width extends number, Height extends number> extends $mol_vector<readonly number[] & {
+        length: Width;
+    }, Height> {
+        added2(diff: readonly (readonly number[] & {
+            length: Width;
+        })[] & {
+            length: Height;
+        }): this;
+        multed2(diff: readonly (readonly number[] & {
+            length: Width;
+        })[] & {
+            length: Height;
+        }): this;
+    }
+}
+
+declare namespace $ {
+
+	type $mol_vector_2d__mol_touch_1 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_touch_2 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_touch_3 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	export class $mol_touch extends $mol_plugin {
+		event_start( next?: any ): any
+		event_move( next?: any ): any
+		event_end( next?: any ): any
+		event_leave( next?: any ): any
+		event_wheel( next?: any ): any
+		start_zoom( next?: number ): number
+		start_distance( next?: number ): number
+		zoom( next?: number ): number
+		allow_draw( ): boolean
+		allow_pan( ): boolean
+		allow_zoom( ): boolean
+		action_type( next?: string ): string
+		action_point( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
+		start_pan( next?: readonly(any)[] ): readonly(any)[]
+		pan( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
+		pointer_center( ): $mol_vector_2d<number>
+		start_pos( next?: any ): any
+		swipe_precision( ): number
+		swipe_right( next?: any ): any
+		swipe_bottom( next?: any ): any
+		swipe_left( next?: any ): any
+		swipe_top( next?: any ): any
+		swipe_from_right( next?: any ): any
+		swipe_from_bottom( next?: any ): any
+		swipe_from_left( next?: any ): any
+		swipe_from_top( next?: any ): any
+		swipe_to_right( next?: any ): any
+		swipe_to_bottom( next?: any ): any
+		swipe_to_left( next?: any ): any
+		swipe_to_top( next?: any ): any
+		draw_start( next?: any ): any
+		draw( next?: any ): any
+		draw_end( next?: any ): any
+		style( ): ({ 
+			'touch-action': string,
+			'overscroll-behavior': string,
+		})  & ReturnType< $mol_plugin['style'] >
+		event( ): ({ 
+			pointerdown( next?: ReturnType< $mol_touch['event_start'] > ): ReturnType< $mol_touch['event_start'] >,
+			pointermove( next?: ReturnType< $mol_touch['event_move'] > ): ReturnType< $mol_touch['event_move'] >,
+			pointerup( next?: ReturnType< $mol_touch['event_end'] > ): ReturnType< $mol_touch['event_end'] >,
+			pointerleave( next?: ReturnType< $mol_touch['event_leave'] > ): ReturnType< $mol_touch['event_leave'] >,
+			wheel( next?: ReturnType< $mol_touch['event_wheel'] > ): ReturnType< $mol_touch['event_wheel'] >,
+		})  & ReturnType< $mol_plugin['event'] >
+	}
+	
+}
+
+//# sourceMappingURL=touch.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * Plugin for touch gestures.
+     * @see [mol_plugin](../plugin/readme.md)
+     */
+    class $mol_touch extends $.$mol_touch {
+        auto(): void;
+        pointer_events(next?: readonly PointerEvent[]): readonly PointerEvent[];
+        pointer_coords(): $mol_vector<$mol_vector_2d<number>, number>;
+        pointer_center(): $mol_vector_2d<number>;
+        event_coords(event: PointerEvent | WheelEvent): $mol_vector_2d<number>;
+        action_point(): $mol_vector_2d<number>;
+        event_eat(event: PointerEvent | WheelEvent): string;
+        event_start(event: PointerEvent): void;
+        event_move(event: PointerEvent): void;
+        event_end(event: PointerEvent): void;
+        event_leave(event: PointerEvent): void;
+        swipe_left(event: PointerEvent): void;
+        swipe_right(event: PointerEvent): void;
+        swipe_top(event: PointerEvent): void;
+        swipe_bottom(event: PointerEvent): void;
+        event_wheel(event: WheelEvent): void;
+    }
+}
+
+declare namespace $ {
+
+	export class $mol_svg_group extends $mol_svg {
+		dom_name( ): string
+	}
+	
+}
+
+//# sourceMappingURL=group.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_svg_title extends $mol_svg {
+		dom_name( ): string
+		sub( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=title.view.tree.d.ts.map
+declare namespace $ {
+
+	type $mol_vector_range__mol_plot_graph_1 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_2 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_3 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_4 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_5 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_6 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_7 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_graph_8 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_2d__mol_plot_graph_9 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_graph['viewport_x'] >, ReturnType< $mol_plot_graph['viewport_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_graph_10 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_graph_11 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_graph['dimensions_pane_x'] >, ReturnType< $mol_plot_graph['dimensions_pane_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_graph_12 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_graph['dimensions_x'] >, ReturnType< $mol_plot_graph['dimensions_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_graph_13 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_graph_14 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_graph['gap_x'] >, ReturnType< $mol_plot_graph['gap_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_svg_title__title_mol_plot_graph_15 = $mol_type_enforce<
+		ReturnType< $mol_plot_graph['hint'] >
+		,
+		ReturnType< $mol_svg_title['title'] >
+	>
+	export class $mol_plot_graph extends $mol_svg_group {
+		type( ): string
+		color( ): string
+		viewport_x( ): $mol_vector_range<number>
+		viewport_y( ): $mol_vector_range<number>
+		dimensions_pane_x( ): $mol_vector_range<number>
+		dimensions_pane_y( ): $mol_vector_range<number>
+		dimensions_x( ): $mol_vector_range<number>
+		dimensions_y( ): $mol_vector_range<number>
+		gap_x( ): $mol_vector_range<number>
+		gap_y( ): $mol_vector_range<number>
+		title( ): string
+		hint( ): ReturnType< $mol_plot_graph['title'] >
+		series_x( ): readonly(number)[]
+		series_y( ): readonly(number)[]
+		attr( ): ({ 
+			'mol_plot_graph_type': ReturnType< $mol_plot_graph['type'] >,
+		})  & ReturnType< $mol_svg_group['attr'] >
+		style( ): ({ 
+			'color': ReturnType< $mol_plot_graph['color'] >,
+		})  & ReturnType< $mol_svg_group['style'] >
+		viewport( ): $mol_vector_2d<$mol_vector_range<number>>
+		shift( ): readonly(number)[]
+		scale( ): readonly(number)[]
+		cursor_position( ): $mol_vector_2d<number>
+		dimensions_pane( ): $mol_vector_2d<$mol_vector_range<number>>
+		dimensions( ): $mol_vector_2d<$mol_vector_range<number>>
+		size_real( ): $mol_vector_2d<number>
+		gap( ): $mol_vector_2d<$mol_vector_range<number>>
+		repos_x( id: any): number
+		repos_y( id: any): number
+		indexes( ): readonly(number)[]
+		points( ): readonly(readonly(number)[])[]
+		front( ): readonly($mol_svg)[]
+		back( ): readonly($mol_svg)[]
+		Hint( ): $mol_svg_title
+		hue( next?: number ): number
+		Sample( ): any
+	}
+	
+	export class $mol_plot_graph_sample extends $mol_view {
+		type( ): string
+		color( ): string
+		attr( ): ({ 
+			'mol_plot_graph_type': ReturnType< $mol_plot_graph_sample['type'] >,
+		})  & ReturnType< $mol_view['attr'] >
+		style( ): ({ 
+			'color': ReturnType< $mol_plot_graph_sample['color'] >,
+		})  & ReturnType< $mol_view['style'] >
+	}
+	
+}
+
+//# sourceMappingURL=graph.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_plot_graph extends $.$mol_plot_graph {
+        viewport(): $mol_vector_2d<$mol_vector_range<number>>;
+        indexes(): readonly number[];
+        repos_x(val: number): number;
+        repos_y(val: number): number;
+        points(): readonly (readonly number[])[];
+        series_x(): readonly number[];
+        dimensions(): $mol_vector_2d<$mol_vector_range<number>>;
+        color(): string;
+        front(): readonly $.$mol_svg[];
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	type $mol_vector_range__mol_plot_pane_1 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['gap_left'] >, ReturnType< $mol_plot_pane['gap_right'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_2 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['gap_bottom'] >, ReturnType< $mol_plot_pane['gap_top'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_3 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_4 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_5 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_6 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_7 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_8 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_9 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_vector_range__mol_plot_pane_10 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_range<number> >
+	>
+	type $mol_touch__zoom_mol_plot_pane_11 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['zoom'] >
+		,
+		ReturnType< $mol_touch['zoom'] >
+	>
+	type $mol_touch__pan_mol_plot_pane_12 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['shift'] >
+		,
+		ReturnType< $mol_touch['pan'] >
+	>
+	type $mol_touch__allow_draw_mol_plot_pane_13 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['allow_draw'] >
+		,
+		ReturnType< $mol_touch['allow_draw'] >
+	>
+	type $mol_touch__allow_pan_mol_plot_pane_14 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['allow_pan'] >
+		,
+		ReturnType< $mol_touch['allow_pan'] >
+	>
+	type $mol_touch__allow_zoom_mol_plot_pane_15 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['allow_zoom'] >
+		,
+		ReturnType< $mol_touch['allow_zoom'] >
+	>
+	type $mol_touch__draw_start_mol_plot_pane_16 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['draw_start'] >
+		,
+		ReturnType< $mol_touch['draw_start'] >
+	>
+	type $mol_touch__draw_mol_plot_pane_17 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['draw'] >
+		,
+		ReturnType< $mol_touch['draw'] >
+	>
+	type $mol_touch__draw_end_mol_plot_pane_18 = $mol_type_enforce<
+		ReturnType< $mol_plot_pane['draw_end'] >
+		,
+		ReturnType< $mol_touch['draw_end'] >
+	>
+	type $mol_vector_2d__mol_plot_pane_19 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['gap_x'] >, ReturnType< $mol_plot_pane['gap_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_pane_20 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['shift_limit_x'] >, ReturnType< $mol_plot_pane['shift_limit_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_pane_21 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_pane_22 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_pane_23 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['scale_limit_x'] >, ReturnType< $mol_plot_pane['scale_limit_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_pane_24 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_pane_25 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_pane_26 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_pane_27 = $mol_type_enforce<
+		[ number, number ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<number> >
+	>
+	type $mol_vector_2d__mol_plot_pane_28 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['dimensions_x'] >, ReturnType< $mol_plot_pane['dimensions_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	type $mol_vector_2d__mol_plot_pane_29 = $mol_type_enforce<
+		[ ReturnType< $mol_plot_pane['dimensions_viewport_x'] >, ReturnType< $mol_plot_pane['dimensions_viewport_y'] > ]
+		,
+		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
+	>
+	export class $mol_plot_pane extends $mol_svg_root {
+		gap_x( ): $mol_vector_range<number>
+		gap_y( ): $mol_vector_range<number>
+		shift_limit_x( ): $mol_vector_range<number>
+		shift_limit_y( ): $mol_vector_range<number>
+		scale_limit_x( ): $mol_vector_range<number>
+		scale_limit_y( ): $mol_vector_range<number>
+		dimensions_x( ): $mol_vector_range<number>
+		dimensions_y( ): $mol_vector_range<number>
+		dimensions_viewport_x( ): $mol_vector_range<number>
+		dimensions_viewport_y( ): $mol_vector_range<number>
+		graphs_sorted( ): readonly($mol_svg)[]
+		graphs( ): readonly($mol_plot_graph)[]
+		graphs_positioned( ): ReturnType< $mol_plot_pane['graphs'] >
+		graphs_visible( ): ReturnType< $mol_plot_pane['graphs_positioned'] >
+		zoom( next?: number ): number
+		cursor_position( ): ReturnType< ReturnType< $mol_plot_pane['Touch'] >['pointer_center'] >
+		allow_draw( ): boolean
+		allow_pan( ): boolean
+		allow_zoom( ): boolean
+		action_type( ): ReturnType< ReturnType< $mol_plot_pane['Touch'] >['action_type'] >
+		action_point( ): ReturnType< ReturnType< $mol_plot_pane['Touch'] >['action_point'] >
+		draw_start( next?: any ): any
+		draw( next?: any ): any
+		draw_end( next?: any ): any
+		Touch( ): $mol_touch
+		aspect( ): string
+		hue_base( next?: number ): number
+		hue_shift( next?: number ): number
+		gap_hor( ): number
+		gap_vert( ): number
+		gap_left( ): ReturnType< $mol_plot_pane['gap_hor'] >
+		gap_right( ): ReturnType< $mol_plot_pane['gap_hor'] >
+		gap_top( ): ReturnType< $mol_plot_pane['gap_vert'] >
+		gap_bottom( ): ReturnType< $mol_plot_pane['gap_vert'] >
+		gap( ): $mol_vector_2d<$mol_vector_range<number>>
+		shift_limit( ): $mol_vector_2d<$mol_vector_range<number>>
+		shift_default( ): $mol_vector_2d<number>
+		shift( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
+		scale_limit( ): $mol_vector_2d<$mol_vector_range<number>>
+		scale_default( ): $mol_vector_2d<number>
+		scale( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
+		scale_x( next?: number ): number
+		scale_y( next?: number ): number
+		size( ): $mol_vector_2d<number>
+		size_real( ): $mol_vector_2d<number>
+		dimensions( ): $mol_vector_2d<$mol_vector_range<number>>
+		dimensions_viewport( ): $mol_vector_2d<$mol_vector_range<number>>
+		sub( ): ReturnType< $mol_plot_pane['graphs_sorted'] >
+		graphs_colored( ): ReturnType< $mol_plot_pane['graphs_visible'] >
+		plugins( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=pane.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * Fastest plot lib for vector graphics.
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_plot_demo
+     */
+    class $mol_plot_pane extends $.$mol_plot_pane {
+        dimensions(): $mol_vector_2d<$mol_vector_range<number>>;
+        size(): $mol_vector_2d<number>;
+        graph_hue(index: number): number;
+        graphs_colored(): $.$mol_plot_graph[];
+        size_real(): $mol_vector_2d<number>;
+        view_box(): string;
+        scale_limit(): $mol_vector_2d<$mol_vector_range<number>>;
+        scale_default(): $mol_vector_2d<number>;
+        scale(next?: $mol_vector_2d<number>): $mol_vector_2d<number>;
+        scale_x(next?: number): number;
+        scale_y(next?: number): number;
+        shift_limit(): $mol_vector_2d<$mol_vector_range<number>>;
+        shift_default(): $mol_vector_2d<number>;
+        graph_touched: boolean;
+        shift(next?: $mol_vector_2d<number>): $mol_vector_2d<number>;
+        reset(event?: Event): void;
+        graphs_visible(): $.$mol_plot_graph[];
+        graphs_positioned(): readonly $.$mol_plot_graph[];
+        dimensions_viewport(): $mol_vector<$mol_vector_range<number>, 2>;
+        viewport(): $mol_vector_2d<$mol_vector_range<number>>;
+        graphs_sorted(): $.$mol_svg[];
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	type $mol_svg_path__geometry_mol_plot_bar_1 = $mol_type_enforce<
+		ReturnType< $mol_plot_bar['curve'] >
+		,
+		ReturnType< $mol_svg_path['geometry'] >
+	>
+	type $mol_plot_graph_sample__color_mol_plot_bar_2 = $mol_type_enforce<
+		ReturnType< $mol_plot_bar['color'] >
+		,
+		ReturnType< $mol_plot_graph_sample['color'] >
+	>
+	export class $mol_plot_bar extends $mol_plot_graph {
+		stroke_width( ): string
+		curve( ): string
+		Curve( ): $mol_svg_path
+		style( ): ({ 
+			'stroke-width': ReturnType< $mol_plot_bar['stroke_width'] >,
+		})  & ReturnType< $mol_plot_graph['style'] >
+		sub( ): readonly(any)[]
+		Sample( ): $mol_plot_graph_sample
+	}
+	
+}
+
+//# sourceMappingURL=bar.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_plot_bar extends $.$mol_plot_bar {
+        indexes(): number[];
+        curve(): string;
+        stroke_width(): string;
+        color(): string;
+        dimensions(): $mol_vector_2d<$mol_vector_range<number>>;
+    }
+}
+
+declare namespace $ {
+}
+
 declare namespace $ {
 }
 
@@ -6796,42 +7526,117 @@ declare namespace $ {
 		,
 		ReturnType< $mol_form_field['Content'] >
 	>
-	type $mol_row__sub_bog_theme_demo_15 = $mol_type_enforce<
+	type $mol_number__value_bog_theme_demo_15 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['sat'] >
+		,
+		ReturnType< $mol_number['value'] >
+	>
+	type $mol_number__precision_change_bog_theme_demo_16 = $mol_type_enforce<
+		number
+		,
+		ReturnType< $mol_number['precision_change'] >
+	>
+	type $mol_form_field__name_bog_theme_demo_17 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_form_field['name'] >
+	>
+	type $mol_form_field__Content_bog_theme_demo_18 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['Sat'] >
+		,
+		ReturnType< $mol_form_field['Content'] >
+	>
+	type $mol_number__value_bog_theme_demo_19 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['lig'] >
+		,
+		ReturnType< $mol_number['value'] >
+	>
+	type $mol_number__precision_change_bog_theme_demo_20 = $mol_type_enforce<
+		number
+		,
+		ReturnType< $mol_number['precision_change'] >
+	>
+	type $mol_form_field__name_bog_theme_demo_21 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_form_field['name'] >
+	>
+	type $mol_form_field__Content_bog_theme_demo_22 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['Lig'] >
+		,
+		ReturnType< $mol_form_field['Content'] >
+	>
+	type $mol_row__sub_bog_theme_demo_23 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_row['sub'] >
 	>
-	type $bog_theme_demo_case__theme_bog_theme_demo_16 = $mol_type_enforce<
+	type $bog_theme_demo_bar__series_x_bog_theme_demo_24 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['bar_x'] >
+		,
+		ReturnType< $bog_theme_demo_bar['series_x'] >
+	>
+	type $bog_theme_demo_bar__series_y_bog_theme_demo_25 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['bar_y'] >
+		,
+		ReturnType< $bog_theme_demo_bar['series_y'] >
+	>
+	type $bog_theme_demo_bar__sat_bog_theme_demo_26 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['sat'] >
+		,
+		ReturnType< $bog_theme_demo_bar['sat'] >
+	>
+	type $bog_theme_demo_bar__lig_bog_theme_demo_27 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['lig'] >
+		,
+		ReturnType< $bog_theme_demo_bar['lig'] >
+	>
+	type $mol_plot_pane__hue_base_bog_theme_demo_28 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['hue'] >
+		,
+		ReturnType< $mol_plot_pane['hue_base'] >
+	>
+	type $mol_plot_pane__hue_shift_bog_theme_demo_29 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['hue_spread'] >
+		,
+		ReturnType< $mol_plot_pane['hue_shift'] >
+	>
+	type $mol_plot_pane__graphs_bog_theme_demo_30 = $mol_type_enforce<
+		ReturnType< $bog_theme_demo['bars'] >
+		,
+		ReturnType< $mol_plot_pane['graphs'] >
+	>
+	type $bog_theme_demo_case__theme_bog_theme_demo_31 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_demo_case['theme'] >
 	>
-	type $bog_theme_demo_case__theme_bog_theme_demo_17 = $mol_type_enforce<
+	type $bog_theme_demo_case__theme_bog_theme_demo_32 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_demo_case['theme'] >
 	>
-	type $bog_theme_demo_case__theme_bog_theme_demo_18 = $mol_type_enforce<
+	type $bog_theme_demo_case__theme_bog_theme_demo_33 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_demo_case['theme'] >
 	>
-	type $bog_theme_demo_case__theme_bog_theme_demo_19 = $mol_type_enforce<
+	type $bog_theme_demo_case__theme_bog_theme_demo_34 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_demo_case['theme'] >
 	>
-	type $bog_theme_demo_case__title_bog_theme_demo_20 = $mol_type_enforce<
+	type $bog_theme_demo_case__title_bog_theme_demo_35 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $bog_theme_demo_case['title'] >
 	>
-	type $bog_theme_demo_case__inner_bog_theme_demo_21 = $mol_type_enforce<
+	type $bog_theme_demo_case__inner_bog_theme_demo_36 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $bog_theme_demo_case['inner'] >
 	>
-	type $mol_scroll__sub_bog_theme_demo_22 = $mol_type_enforce<
+	type $mol_scroll__sub_bog_theme_demo_37 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_scroll['sub'] >
@@ -6852,7 +7657,18 @@ declare namespace $ {
 		hue_spread( next?: number ): number
 		Hue_spread( ): $mol_number
 		Hue_spread_field( ): $mol_form_field
+		sat( next?: number ): number
+		Sat( ): $mol_number
+		Sat_field( ): $mol_form_field
+		lig( next?: number ): number
+		Lig( ): $mol_number
+		Lig_field( ): $mol_form_field
 		Config( ): $mol_row
+		bar_x( id: any): readonly(number)[]
+		bar_y( id: any): readonly(number)[]
+		Bar( id: any): $bog_theme_demo_bar
+		bars( ): readonly(any)[]
+		Plot( ): $mol_plot_pane
 		Base( ): $bog_theme_demo_case
 		Current( ): $bog_theme_demo_case
 		Special( ): $bog_theme_demo_case
@@ -6966,6 +7782,11 @@ declare namespace $ {
 		inner( ): readonly(any)[]
 	}
 	
+	export class $bog_theme_demo_bar extends $mol_plot_bar {
+		sat( next?: number ): number
+		lig( next?: number ): number
+	}
+	
 }
 
 //# sourceMappingURL=demo.view.tree.d.ts.map
@@ -6976,6 +7797,14 @@ declare namespace $.$$ {
         theme_options(): any[];
         theme_dictionary(): Record<string, string>;
         theme_current(next?: string): string;
+        bars(): $.$bog_theme_demo_bar[];
+        bar_x(index: number): number[];
+        bar_y(index: number): number[];
+    }
+    class $bog_theme_demo_bar extends $.$bog_theme_demo_bar {
+        sat(next?: number): number;
+        lig(next?: number): number;
+        color(): string;
     }
 }
 
@@ -7712,8 +8541,10 @@ declare namespace $ {
     class $giper_baza_link extends Object {
         readonly str: string;
         constructor(str: string);
+        static [Symbol.match](str: string): RegExpMatchArray | null;
+        static [Symbol.matchAll](str: string): RegExpStringIterator<RegExpExecArray>;
         static hole: $giper_baza_link;
-        static check(val: string): string | null;
+        static check(val: string): $giper_baza_link | null;
         [$mol_key_handle](): string;
         toString(): string;
         toJSON(): string;
@@ -8611,7 +9442,9 @@ declare namespace $ {
         rich_index: Map<string | null, any>;
         /** Isolated Vary for custom types */
         zone(): $mol_vary_class;
+        rich(keys: readonly string[], vals: readonly unknown[]): any;
         rich_node(keys: readonly string[]): Map<string | null, any>;
+        lean(obj: {}): any;
         lean_find(val: any): any;
         /** Adds custom types support. */
         type<const Instance extends object, const Keys extends readonly any[], const Vals extends readonly any[]>({ type, keys, rich, lean }: {
@@ -8687,7 +9520,7 @@ declare namespace $ {
         seal_item_del(lord: $giper_baza_link, hash: $giper_baza_link): void;
         seal_item_set(seal: $giper_baza_unit_seal, hash: $giper_baza_link): void;
         sand_get(head: $giper_baza_link, lord: $giper_baza_link, self: $giper_baza_link): $giper_baza_unit_sand | null;
-        _self_all: $mol_wire_dict<string, $giper_baza_unit_sand | null>;
+        _self_all: Map<string, boolean>;
         /** Generates unique local id base on optional idea number or random. */
         self_make(idea?: number): $giper_baza_link;
         /** Makes new Area based on Idea or random. Once transfers rights from this Land. */
@@ -8777,6 +9610,7 @@ declare namespace $ {
     class $mol_rest_port extends $mol_object {
         send_code(code: $mol_rest_code): void;
         send_type(mime: $mol_rest_port_mime): void;
+        send_name(name: string): void;
         origin(): string;
         address(): string;
         send_data(data: null | string | Uint8Array<ArrayBuffer> | Element | object): void;
@@ -8829,6 +9663,8 @@ declare namespace $ {
         glob(): $giper_baza_glob;
         lands_news: $mol_wire_set<string>;
         static masters_default: string[];
+        static masters_seeded(): string[] | null;
+        static masters_override(): string[] | null;
         static masters(): string[];
         master_cursor(next?: number): number;
         master_current(): string;
@@ -9451,7 +10287,7 @@ declare namespace $ {
         static tag: keyof typeof $giper_baza_unit_sand_tag;
         /** All Vary in the list. */
         items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-        /** Replace sublist by  new one with reconciliation. */
+        /** Replace sublist by new one with reconciliation. */
         splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
         /** Unit by Vary. */
         find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -9598,7 +10434,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -9719,7 +10555,7 @@ declare namespace $ {
             items(next?: readonly Uint8Array<ArrayBuffer>[] | undefined): readonly Uint8Array<ArrayBuffer>[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -9954,7 +10790,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -10086,7 +10922,7 @@ declare namespace $ {
             items(next?: readonly boolean[] | undefined): readonly boolean[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -10259,7 +11095,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -10391,7 +11227,7 @@ declare namespace $ {
             items(next?: readonly bigint[] | undefined): readonly bigint[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -10564,7 +11400,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -10696,7 +11532,7 @@ declare namespace $ {
             items(next?: readonly number[] | undefined): readonly number[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -10869,7 +11705,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -11001,7 +11837,7 @@ declare namespace $ {
             items(next?: readonly string[] | undefined): readonly string[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -11174,7 +12010,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -11306,7 +12142,7 @@ declare namespace $ {
             items(next?: readonly $mol_time_moment[] | undefined): readonly $mol_time_moment[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -11541,7 +12377,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -11673,7 +12509,7 @@ declare namespace $ {
             items(next?: readonly $mol_time_duration[] | undefined): readonly $mol_time_duration[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -11908,7 +12744,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -12040,7 +12876,7 @@ declare namespace $ {
             items(next?: readonly $mol_time_interval[] | undefined): readonly $mol_time_interval[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -12275,7 +13111,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -12407,7 +13243,7 @@ declare namespace $ {
             items(next?: readonly Record<string, unknown>[] | undefined): readonly Record<string, unknown>[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -12642,7 +13478,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -12774,7 +13610,7 @@ declare namespace $ {
             items(next?: readonly (readonly unknown[])[] | undefined): readonly (readonly unknown[])[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -13009,7 +13845,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -13141,7 +13977,7 @@ declare namespace $ {
             items(next?: readonly Element[] | undefined): readonly Element[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -13379,7 +14215,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -13511,7 +14347,7 @@ declare namespace $ {
             items(next?: readonly $mol_tree2[] | undefined): readonly $mol_tree2[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -13746,7 +14582,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -13878,7 +14714,7 @@ declare namespace $ {
             items(next?: readonly $giper_baza_link[] | undefined): readonly $giper_baza_link[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -14113,7 +14949,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -14251,7 +15087,7 @@ declare namespace $ {
                 items(next?: readonly $giper_baza_link[] | undefined): readonly $giper_baza_link[];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -14487,7 +15323,7 @@ declare namespace $ {
                     })["default"][];
                     /** All Vary in the list. */
                     items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                    /** Replace sublist by  new one with reconciliation. */
+                    /** Replace sublist by new one with reconciliation. */
                     splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                     /** Unit by Vary. */
                     find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -14624,7 +15460,7 @@ declare namespace $ {
             items(next?: readonly $giper_baza_link[] | undefined): readonly $giper_baza_link[];
             /** All Vary in the list. */
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-            /** Replace sublist by  new one with reconciliation. */
+            /** Replace sublist by new one with reconciliation. */
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             /** Unit by Vary. */
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -14677,7 +15513,7 @@ declare namespace $ {
                 items(next?: readonly $giper_baza_link[] | undefined): readonly $giper_baza_link[];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -14913,7 +15749,7 @@ declare namespace $ {
                     })["default"][];
                     /** All Vary in the list. */
                     items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                    /** Replace sublist by  new one with reconciliation. */
+                    /** Replace sublist by new one with reconciliation. */
                     splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                     /** Unit by Vary. */
                     find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -15231,7 +16067,7 @@ declare namespace $ {
                 })["default"][];
                 /** All Vary in the list. */
                 items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
-                /** Replace sublist by  new one with reconciliation. */
+                /** Replace sublist by new one with reconciliation. */
                 splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
                 /** Unit by Vary. */
                 find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
@@ -39402,276 +40238,6 @@ declare namespace $.$$ {
 
 declare namespace $ {
 
-	type $mol_dump_value__value_mol_dump_list_1 = $mol_type_enforce<
-		ReturnType< $mol_dump_list['dump_value'] >
-		,
-		ReturnType< $mol_dump_value['value'] >
-	>
-	type $mol_dump_value__expanded_mol_dump_list_2 = $mol_type_enforce<
-		ReturnType< $mol_dump_list['dump_expanded'] >
-		,
-		ReturnType< $mol_dump_value['expanded'] >
-	>
-	type $mol_dump_value__prototypes_mol_dump_list_3 = $mol_type_enforce<
-		ReturnType< $mol_dump_list['prototypes'] >
-		,
-		ReturnType< $mol_dump_value['prototypes'] >
-	>
-	type $mol_dump_value__preview_show_mol_dump_list_4 = $mol_type_enforce<
-		ReturnType< $mol_dump_list['preview_show'] >
-		,
-		ReturnType< $mol_dump_value['preview_show'] >
-	>
-	export class $mol_dump_list extends $mol_view {
-		dump_value( id: any): any
-		dump_expanded( id: any, next?: boolean ): boolean
-		prototypes( ): boolean
-		preview_show( ): boolean
-		Dump( id: any): $mol_dump_value
-		values( ): readonly(any)[]
-		sub( ): readonly(any)[]
-	}
-	
-}
-
-//# sourceMappingURL=list.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * Dumps any JS values.
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_dump_demo
-     */
-    class $mol_dump_list extends $.$mol_dump_list {
-        sub(): $.$mol_dump_value[];
-        dump_value(index: number): any;
-        expand_all(event?: Event): void;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	type $mol_text_code__text_mol_dump_value_1 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['simple'] >
-		,
-		ReturnType< $mol_text_code['text'] >
-	>
-	type $mol_text_code__text_mol_dump_value_2 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['expand_title'] >
-		,
-		ReturnType< $mol_text_code['text'] >
-	>
-	type $mol_check_expand__minimal_height_mol_dump_value_3 = $mol_type_enforce<
-		number
-		,
-		ReturnType< $mol_check_expand['minimal_height'] >
-	>
-	type $mol_check_expand__minimal_width_mol_dump_value_4 = $mol_type_enforce<
-		number
-		,
-		ReturnType< $mol_check_expand['minimal_width'] >
-	>
-	type $mol_check_expand__expanded_mol_dump_value_5 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['expanded'] >
-		,
-		ReturnType< $mol_check_expand['expanded'] >
-	>
-	type $mol_check_expand__expandable_mol_dump_value_6 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['expandable'] >
-		,
-		ReturnType< $mol_check_expand['expandable'] >
-	>
-	type $mol_check_expand__clicks_mol_dump_value_7 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['expand_all'] >
-		,
-		ReturnType< $mol_check_expand['clicks'] >
-	>
-	type $mol_check_expand__label_mol_dump_value_8 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_check_expand['label'] >
-	>
-	type $mol_view__dom_node_mol_dump_value_9 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['preview_dom'] >
-		,
-		ReturnType< $mol_view['dom_node'] >
-	>
-	type $mol_view__render_mol_dump_value_10 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['preview'] >
-		,
-		ReturnType< $mol_view['render'] >
-	>
-	type $mol_view__sub_mol_dump_value_11 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_view['sub'] >
-	>
-	type $mol_dump_list__values_mol_dump_value_12 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['row_values'] >
-		,
-		ReturnType< $mol_dump_list['values'] >
-	>
-	type $mol_dump_list__prototypes_mol_dump_value_13 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['prototypes'] >
-		,
-		ReturnType< $mol_dump_list['prototypes'] >
-	>
-	type $mol_dump_list__preview_show_mol_dump_value_14 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['preview_show'] >
-		,
-		ReturnType< $mol_dump_list['preview_show'] >
-	>
-	type $mol_expander__expanded_mol_dump_value_15 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['expanded'] >
-		,
-		ReturnType< $mol_expander['expanded'] >
-	>
-	type $mol_expander__Trigger_mol_dump_value_16 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['Expand_head'] >
-		,
-		ReturnType< $mol_expander['Trigger'] >
-	>
-	type $mol_expander__content_mol_dump_value_17 = $mol_type_enforce<
-		ReturnType< $mol_dump_value['expand_content'] >
-		,
-		ReturnType< $mol_expander['content'] >
-	>
-	export class $mol_dump_value extends $mol_view {
-		simple( ): string
-		Simple( ): $mol_text_code
-		expanded( next?: boolean ): boolean
-		expandable( ): boolean
-		expand_all( next?: any ): any
-		expand_title( ): string
-		Expand_title( ): $mol_text_code
-		Expand_head( ): $mol_check_expand
-		preview_dom( ): any
-		preview( ): any
-		Preview_dom( ): $mol_view
-		Preview( ): $mol_view
-		row_values( id: any): readonly(any)[]
-		prototypes( ): boolean
-		Row( id: any): $mol_dump_list
-		expand_content( ): readonly(any)[]
-		Expand( ): $mol_expander
-		value( next?: any ): any
-		preview_show( next?: boolean ): boolean
-		sub( ): readonly(any)[]
-	}
-	
-}
-
-//# sourceMappingURL=value.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * Dumps any JS values.
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_dump_demo
-     */
-    class $mol_dump_value extends $.$mol_dump_value {
-        sub(): $.$mol_expander[] | $.$mol_text_code[];
-        simple(): string;
-        expand_title(): any;
-        rows_values(): any[][];
-        preview_dom(): Element | null;
-        expand_content(): ($mol_view | $.$mol_dump_list)[];
-        expandable(): boolean;
-        row_values(index: number): any[];
-        expand_all(event?: Event): void;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	type $giper_baza_link_chip__link_giper_baza_unit_sand_dump_1 = $mol_type_enforce<
-		ReturnType< $giper_baza_unit_sand_dump['value'] >
-		,
-		ReturnType< $giper_baza_link_chip['link'] >
-	>
-	type $mol_dump_value__value_giper_baza_unit_sand_dump_2 = $mol_type_enforce<
-		ReturnType< $giper_baza_unit_sand_dump['value'] >
-		,
-		ReturnType< $mol_dump_value['value'] >
-	>
-	export class $giper_baza_unit_sand_dump extends $mol_view {
-		value( ): any
-		land( ): $giper_baza_land
-		sand( ): $giper_baza_unit_sand
-		Ref( ): $giper_baza_link_chip
-		Other( ): $mol_dump_value
-	}
-	
-}
-
-//# sourceMappingURL=dump.view.tree.d.ts.map
-declare namespace $.$$ {
-    class $giper_baza_unit_sand_dump extends $.$giper_baza_unit_sand_dump {
-        value(): $giper_baza_vary_type;
-        sub(): $.$mol_dump_value[] | $.$giper_baza_link_chip[];
-    }
-}
-
-declare namespace $.$$ {
-}
-
-declare namespace $ {
-
-	export class $mol_icon_plus extends $mol_icon {
-		path( ): string
-	}
-	
-}
-
-//# sourceMappingURL=plus.view.tree.d.ts.map
-declare namespace $ {
-
-	export class $mol_drag extends $mol_ghost {
-		start( next?: any ): any
-		drag_start( next?: ReturnType< $mol_drag['start'] > ): ReturnType< $mol_drag['start'] >
-		move( next?: any ): any
-		drag_move( next?: ReturnType< $mol_drag['move'] > ): ReturnType< $mol_drag['move'] >
-		end( next?: any ): any
-		drag_end( next?: ReturnType< $mol_drag['end'] > ): ReturnType< $mol_drag['end'] >
-		status( next?: string ): string
-		event( ): ({ 
-			dragstart( next?: ReturnType< $mol_drag['drag_start'] > ): ReturnType< $mol_drag['drag_start'] >,
-			drag( next?: ReturnType< $mol_drag['drag_move'] > ): ReturnType< $mol_drag['drag_move'] >,
-			dragend( next?: ReturnType< $mol_drag['drag_end'] > ): ReturnType< $mol_drag['drag_end'] >,
-		}) 
-		attr( ): ({ 
-			'draggable': boolean,
-			'mol_drag_status': ReturnType< $mol_drag['status'] >,
-		}) 
-		transfer( ): ({ 
-			'text/plain': string,
-			'text/html': string,
-			'text/uri-list': string,
-		}) 
-		allow_copy( ): boolean
-		allow_link( ): boolean
-		allow_move( ): boolean
-		image( ): ReturnType< $mol_drag['dom_node'] >
-	}
-	
-}
-
-//# sourceMappingURL=drag.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_drag_demo
-     */
-    class $mol_drag extends $.$mol_drag {
-        status(next?: "ready" | "drag"): "ready" | "drag";
-        drag_start(event: DragEvent): void;
-        drag_end(event: DragEvent): void;
-    }
-}
-
-declare namespace $ {
-
 	export class $mol_drop extends $mol_ghost {
 		enter( next?: any ): any
 		move( next?: any ): any
@@ -39710,17 +40276,6 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $mol_bar extends $mol_view {
-	}
-	
-}
-
-//# sourceMappingURL=bar.view.tree.d.ts.map
-declare namespace $ {
 
 	export class $mol_icon_tick extends $mol_icon {
 		path( ): string
@@ -39742,156 +40297,140 @@ declare namespace $ {
 
 //# sourceMappingURL=box.view.tree.d.ts.map
 declare namespace $ {
-
-	type $mol_textarea_edit__value_mol_textarea_1 = $mol_type_enforce<
-		ReturnType< $mol_textarea['value'] >
-		,
-		ReturnType< $mol_textarea_edit['value'] >
-	>
-	type $mol_textarea_edit__hint_mol_textarea_2 = $mol_type_enforce<
-		ReturnType< $mol_textarea['hint'] >
-		,
-		ReturnType< $mol_textarea_edit['hint'] >
-	>
-	type $mol_textarea_edit__enabled_mol_textarea_3 = $mol_type_enforce<
-		ReturnType< $mol_textarea['enabled'] >
-		,
-		ReturnType< $mol_textarea_edit['enabled'] >
-	>
-	type $mol_textarea_edit__spellcheck_mol_textarea_4 = $mol_type_enforce<
-		ReturnType< $mol_textarea['spellcheck'] >
-		,
-		ReturnType< $mol_textarea_edit['spellcheck'] >
-	>
-	type $mol_textarea_edit__length_max_mol_textarea_5 = $mol_type_enforce<
-		ReturnType< $mol_textarea['length_max'] >
-		,
-		ReturnType< $mol_textarea_edit['length_max'] >
-	>
-	type $mol_textarea_edit__selection_mol_textarea_6 = $mol_type_enforce<
-		ReturnType< $mol_textarea['selection'] >
-		,
-		ReturnType< $mol_textarea_edit['selection'] >
-	>
-	type $mol_textarea_edit__submit_mol_textarea_7 = $mol_type_enforce<
-		ReturnType< $mol_textarea['submit'] >
-		,
-		ReturnType< $mol_textarea_edit['submit'] >
-	>
-	type $mol_textarea_edit__submit_with_ctrl_mol_textarea_8 = $mol_type_enforce<
-		ReturnType< $mol_textarea['submit_with_ctrl'] >
-		,
-		ReturnType< $mol_textarea_edit['submit_with_ctrl'] >
-	>
-	type $mol_text_code__text_mol_textarea_9 = $mol_type_enforce<
-		ReturnType< $mol_textarea['value'] >
-		,
-		ReturnType< $mol_text_code['text'] >
-	>
-	type $mol_text_code__render_visible_only_mol_textarea_10 = $mol_type_enforce<
-		boolean
-		,
-		ReturnType< $mol_text_code['render_visible_only'] >
-	>
-	type $mol_text_code__row_numb_mol_textarea_11 = $mol_type_enforce<
-		ReturnType< $mol_textarea['row_numb'] >
-		,
-		ReturnType< $mol_text_code['row_numb'] >
-	>
-	type $mol_text_code__sidebar_showed_mol_textarea_12 = $mol_type_enforce<
-		ReturnType< $mol_textarea['sidebar_showed'] >
-		,
-		ReturnType< $mol_text_code['sidebar_showed'] >
-	>
-	type $mol_text_code__highlight_mol_textarea_13 = $mol_type_enforce<
-		ReturnType< $mol_textarea['highlight'] >
-		,
-		ReturnType< $mol_text_code['highlight'] >
-	>
-	type $mol_text_code__syntax_mol_textarea_14 = $mol_type_enforce<
-		ReturnType< $mol_textarea['syntax'] >
-		,
-		ReturnType< $mol_text_code['syntax'] >
-	>
-	export class $mol_textarea extends $mol_stack {
-		clickable( next?: boolean ): boolean
-		sidebar_showed( ): boolean
-		press( next?: any ): any
-		hover( next?: any ): any
-		value( next?: string ): string
-		hint( ): string
-		enabled( ): boolean
-		spellcheck( ): boolean
-		length_max( ): number
-		selection( next?: readonly(number)[] ): readonly(number)[]
-		bring( ): ReturnType< ReturnType< $mol_textarea['Edit'] >['bring'] >
-		submit( next?: any ): any
-		submit_with_ctrl( ): boolean
-		Edit( ): $mol_textarea_edit
-		row_numb( id: any): number
-		highlight( ): string
-		syntax( ): $mol_syntax2
-		View( ): $mol_text_code
-		attr( ): ({ 
-			'mol_textarea_clickable': ReturnType< $mol_textarea['clickable'] >,
-			'mol_textarea_sidebar_showed': ReturnType< $mol_textarea['sidebar_showed'] >,
-		})  & ReturnType< $mol_stack['attr'] >
-		event( ): ({ 
-			keydown( next?: ReturnType< $mol_textarea['press'] > ): ReturnType< $mol_textarea['press'] >,
-			pointermove( next?: ReturnType< $mol_textarea['hover'] > ): ReturnType< $mol_textarea['hover'] >,
-		}) 
-		sub( ): readonly(any)[]
-		symbols_alt( ): Record<string, string>
-		symbols_alt_ctrl( ): Record<string, string>
-		symbols_alt_shift( ): Record<string, string>
-	}
-	
-	export class $mol_textarea_edit extends $mol_string {
-		dom_name( ): string
-		enter( ): string
-		field( ): ({ 
-			'scrollTop': number,
-		})  & ReturnType< $mol_string['field'] >
-	}
-	
-}
-
-//# sourceMappingURL=textarea.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * An input field for entering multiline text.
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_textarea_demo
-     */
-    class $mol_textarea extends $.$mol_textarea {
-        indent_inc(): void;
-        indent_dec(): void;
-        symbol_insert(event: KeyboardEvent): void;
-        clickable(next?: boolean): boolean;
-        hover(event: PointerEvent): void;
-        press(event: KeyboardEvent): void;
-        row_numb(index: number): number;
-        syntax(): $mol_syntax2<{
-            'code-indent': RegExp;
-            'code-docs': RegExp;
-            'code-comment-block': RegExp;
-            'code-link': RegExp;
-            'code-comment-inline': RegExp;
-            'code-string': RegExp;
-            'code-number': RegExp;
-            'code-call': RegExp;
-            'code-sexpr': RegExp;
-            'code-field': RegExp;
-            'code-keyword': RegExp;
-            'code-global': RegExp;
-            'code-word': RegExp;
-            'code-decorator': RegExp;
-            'code-tag': RegExp;
-            'code-punctuation': RegExp;
-        }>;
-    }
 }
 
 declare namespace $ {
+
+	export class $mol_bar extends $mol_view {
+	}
+	
+}
+
+//# sourceMappingURL=bar.view.tree.d.ts.map
+declare namespace $ {
+
+	type $mol_hotkey__key_mol_bigint_field_1 = $mol_type_enforce<
+		({ 
+			down( next?: ReturnType< $mol_bigint_field['decrement'] > ): ReturnType< $mol_bigint_field['decrement'] >,
+			up( next?: ReturnType< $mol_bigint_field['increment'] > ): ReturnType< $mol_bigint_field['increment'] >,
+			pageDown( next?: ReturnType< $mol_bigint_field['decrement_boost'] > ): ReturnType< $mol_bigint_field['decrement_boost'] >,
+			pageUp( next?: ReturnType< $mol_bigint_field['increment_boost'] > ): ReturnType< $mol_bigint_field['increment_boost'] >,
+		}) 
+		,
+		ReturnType< $mol_hotkey['key'] >
+	>
+	type $mol_string__type_mol_bigint_field_2 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_string['type'] >
+	>
+	type $mol_string__keyboard_mol_bigint_field_3 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_string['keyboard'] >
+	>
+	type $mol_string__value_mol_bigint_field_4 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['value_string'] >
+		,
+		ReturnType< $mol_string['value'] >
+	>
+	type $mol_string__hint_mol_bigint_field_5 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['hint'] >
+		,
+		ReturnType< $mol_string['hint'] >
+	>
+	type $mol_string__enabled_mol_bigint_field_6 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['string_enabled'] >
+		,
+		ReturnType< $mol_string['enabled'] >
+	>
+	type $mol_string__submit_mol_bigint_field_7 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['submit'] >
+		,
+		ReturnType< $mol_string['submit'] >
+	>
+	type $mol_string__selection_mol_bigint_field_8 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['selection'] >
+		,
+		ReturnType< $mol_string['selection'] >
+	>
+	type $mol_button_minor__click_mol_bigint_field_9 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['decrement'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__enabled_mol_bigint_field_10 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['decrement_enabled'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__sub_mol_bigint_field_11 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__click_mol_bigint_field_12 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['increment'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__enabled_mol_bigint_field_13 = $mol_type_enforce<
+		ReturnType< $mol_bigint_field['increment_enabled'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__sub_mol_bigint_field_14 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	export class $mol_bigint_field extends $mol_bar {
+		decrement( next?: any ): any
+		increment( next?: any ): any
+		decrement_boost( next?: any ): any
+		increment_boost( next?: any ): any
+		Hotkey( ): $mol_hotkey
+		value_string( next?: string ): string
+		hint( ): string
+		string_enabled( ): ReturnType< $mol_bigint_field['enabled'] >
+		submit( next?: any ): any
+		selection( next?: readonly(number)[] ): readonly(number)[]
+		String( ): $mol_string
+		decrement_enabled( ): ReturnType< $mol_bigint_field['enabled'] >
+		Decrement_icon( ): $mol_icon_menu_down_outline
+		Decrement( ): $mol_button_minor
+		increment_enabled( ): ReturnType< $mol_bigint_field['enabled'] >
+		Increment_icon( ): $mol_icon_menu_up_outline
+		Increment( ): $mol_button_minor
+		step( ): bigint
+		boost( ): bigint
+		value_min( ): bigint | null
+		value_max( ): bigint | null
+		value( next?: bigint ): bigint
+		enabled( next?: boolean ): boolean
+		plugins( ): readonly(any)[]
+		sub( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=field.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_bigint_field extends $.$mol_bigint_field {
+        sub(): ($.$mol_string | $mol_button_minor)[];
+        value_string(next?: string): string;
+        shift(diff: bigint): void;
+        shift_boost(diff: bigint): void;
+        increment(event: Event): void;
+        decrement(event?: Event): void;
+        increment_boost(event: Event): void;
+        decrement_boost(event: Event): void;
+        decrement_enabled(): boolean;
+        increment_enabled(): boolean;
+    }
+}
+
+declare namespace $.$$ {
 }
 
 declare namespace $ {
@@ -39965,6 +40504,24 @@ declare namespace $ {
 }
 
 //# sourceMappingURL=left.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_chevron_left extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=left.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_chevron_right extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=right.view.tree.d.ts.map
 declare namespace $ {
 
 	export class $mol_icon_chevron_double_right extends $mol_icon {
@@ -40402,10 +40959,733 @@ declare namespace $ {
 }
 
 declare namespace $ {
+
+	type $mol_textarea_edit__value_mol_textarea_1 = $mol_type_enforce<
+		ReturnType< $mol_textarea['value'] >
+		,
+		ReturnType< $mol_textarea_edit['value'] >
+	>
+	type $mol_textarea_edit__hint_mol_textarea_2 = $mol_type_enforce<
+		ReturnType< $mol_textarea['hint'] >
+		,
+		ReturnType< $mol_textarea_edit['hint'] >
+	>
+	type $mol_textarea_edit__enabled_mol_textarea_3 = $mol_type_enforce<
+		ReturnType< $mol_textarea['enabled'] >
+		,
+		ReturnType< $mol_textarea_edit['enabled'] >
+	>
+	type $mol_textarea_edit__spellcheck_mol_textarea_4 = $mol_type_enforce<
+		ReturnType< $mol_textarea['spellcheck'] >
+		,
+		ReturnType< $mol_textarea_edit['spellcheck'] >
+	>
+	type $mol_textarea_edit__length_max_mol_textarea_5 = $mol_type_enforce<
+		ReturnType< $mol_textarea['length_max'] >
+		,
+		ReturnType< $mol_textarea_edit['length_max'] >
+	>
+	type $mol_textarea_edit__selection_mol_textarea_6 = $mol_type_enforce<
+		ReturnType< $mol_textarea['selection'] >
+		,
+		ReturnType< $mol_textarea_edit['selection'] >
+	>
+	type $mol_textarea_edit__submit_mol_textarea_7 = $mol_type_enforce<
+		ReturnType< $mol_textarea['submit'] >
+		,
+		ReturnType< $mol_textarea_edit['submit'] >
+	>
+	type $mol_textarea_edit__submit_with_ctrl_mol_textarea_8 = $mol_type_enforce<
+		ReturnType< $mol_textarea['submit_with_ctrl'] >
+		,
+		ReturnType< $mol_textarea_edit['submit_with_ctrl'] >
+	>
+	type $mol_text_code__attr_mol_textarea_9 = $mol_type_enforce<
+		({ 
+			'inert': string,
+		})  & ReturnType< $mol_text_code['attr'] >
+		,
+		ReturnType< $mol_text_code['attr'] >
+	>
+	type $mol_text_code__text_mol_textarea_10 = $mol_type_enforce<
+		ReturnType< $mol_textarea['value'] >
+		,
+		ReturnType< $mol_text_code['text'] >
+	>
+	type $mol_text_code__render_visible_only_mol_textarea_11 = $mol_type_enforce<
+		boolean
+		,
+		ReturnType< $mol_text_code['render_visible_only'] >
+	>
+	type $mol_text_code__row_numb_mol_textarea_12 = $mol_type_enforce<
+		ReturnType< $mol_textarea['row_numb'] >
+		,
+		ReturnType< $mol_text_code['row_numb'] >
+	>
+	type $mol_text_code__sidebar_showed_mol_textarea_13 = $mol_type_enforce<
+		ReturnType< $mol_textarea['sidebar_showed'] >
+		,
+		ReturnType< $mol_text_code['sidebar_showed'] >
+	>
+	type $mol_text_code__highlight_mol_textarea_14 = $mol_type_enforce<
+		ReturnType< $mol_textarea['highlight'] >
+		,
+		ReturnType< $mol_text_code['highlight'] >
+	>
+	type $mol_text_code__syntax_mol_textarea_15 = $mol_type_enforce<
+		ReturnType< $mol_textarea['syntax'] >
+		,
+		ReturnType< $mol_text_code['syntax'] >
+	>
+	export class $mol_textarea extends $mol_stack {
+		clickable( next?: boolean ): boolean
+		sidebar_showed( ): boolean
+		press( next?: any ): any
+		hover( next?: any ): any
+		value( next?: string ): string
+		hint( ): string
+		enabled( ): boolean
+		spellcheck( ): boolean
+		length_max( ): number
+		selection( next?: readonly(number)[] ): readonly(number)[]
+		bring( ): ReturnType< ReturnType< $mol_textarea['Edit'] >['bring'] >
+		submit( next?: any ): any
+		submit_with_ctrl( ): boolean
+		Edit( ): $mol_textarea_edit
+		row_numb( id: any): number
+		highlight( ): string
+		syntax( ): $mol_syntax2
+		View( ): $mol_text_code
+		attr( ): ({ 
+			'mol_textarea_clickable': ReturnType< $mol_textarea['clickable'] >,
+			'mol_textarea_sidebar_showed': ReturnType< $mol_textarea['sidebar_showed'] >,
+		})  & ReturnType< $mol_stack['attr'] >
+		event( ): ({ 
+			keydown( next?: ReturnType< $mol_textarea['press'] > ): ReturnType< $mol_textarea['press'] >,
+			pointermove( next?: ReturnType< $mol_textarea['hover'] > ): ReturnType< $mol_textarea['hover'] >,
+		}) 
+		sub( ): readonly(any)[]
+		symbols_alt( ): Record<string, string>
+		symbols_alt_ctrl( ): Record<string, string>
+		symbols_alt_shift( ): Record<string, string>
+	}
+	
+	export class $mol_textarea_edit extends $mol_string {
+		dom_name( ): string
+		enter( ): string
+		field( ): ({ 
+			'scrollTop': number,
+		})  & ReturnType< $mol_string['field'] >
+	}
+	
+}
+
+//# sourceMappingURL=textarea.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * An input field for entering multiline text.
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_textarea_demo
+     */
+    class $mol_textarea extends $.$mol_textarea {
+        indent_inc(): void;
+        indent_dec(): void;
+        symbol_insert(event: KeyboardEvent): void;
+        clickable(next?: boolean): boolean;
+        hover(event: PointerEvent): void;
+        press(event: KeyboardEvent): void;
+        row_numb(index: number): number;
+        syntax(): $mol_syntax2<{
+            'code-indent': RegExp;
+            'code-docs': RegExp;
+            'code-comment-block': RegExp;
+            'code-link': RegExp;
+            'code-comment-inline': RegExp;
+            'code-string': RegExp;
+            'code-number': RegExp;
+            'code-call': RegExp;
+            'code-sexpr': RegExp;
+            'code-field': RegExp;
+            'code-keyword': RegExp;
+            'code-global': RegExp;
+            'code-word': RegExp;
+            'code-decorator': RegExp;
+            'code-tag': RegExp;
+            'code-punctuation': RegExp;
+        }>;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $mol_icon_plus extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=plus.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_drag extends $mol_ghost {
+		start( next?: any ): any
+		drag_start( next?: ReturnType< $mol_drag['start'] > ): ReturnType< $mol_drag['start'] >
+		move( next?: any ): any
+		drag_move( next?: ReturnType< $mol_drag['move'] > ): ReturnType< $mol_drag['move'] >
+		end( next?: any ): any
+		drag_end( next?: ReturnType< $mol_drag['end'] > ): ReturnType< $mol_drag['end'] >
+		status( next?: string ): string
+		event( ): ({ 
+			dragstart( next?: ReturnType< $mol_drag['drag_start'] > ): ReturnType< $mol_drag['drag_start'] >,
+			drag( next?: ReturnType< $mol_drag['drag_move'] > ): ReturnType< $mol_drag['drag_move'] >,
+			dragend( next?: ReturnType< $mol_drag['drag_end'] > ): ReturnType< $mol_drag['drag_end'] >,
+		}) 
+		attr( ): ({ 
+			'draggable': boolean,
+			'mol_drag_status': ReturnType< $mol_drag['status'] >,
+		}) 
+		transfer( ): ({ 
+			'text/plain': string,
+			'text/html': string,
+			'text/uri-list': string,
+		}) 
+		allow_copy( ): boolean
+		allow_link( ): boolean
+		allow_move( ): boolean
+		image( ): ReturnType< $mol_drag['dom_node'] >
+	}
+	
+}
+
+//# sourceMappingURL=drag.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_drag_demo
+     */
+    class $mol_drag extends $.$mol_drag {
+        status(next?: "ready" | "drag"): "ready" | "drag";
+        drag_start(event: DragEvent): void;
+        drag_end(event: DragEvent): void;
+    }
+}
+
+declare namespace $ {
+
+	export class $mol_icon_circle extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=circle.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_circle_off_outline extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=outline.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_flag extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=flag.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_flag_checkered extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=checkered.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_pound extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=pound.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_division extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=division.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_clock extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=clock.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_clock_outline extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=outline.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_card extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=card.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_card_text extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=text.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_card_text_outline extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=outline.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_format_list_bulleted extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=bulleted.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_table extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=table.view.tree.d.ts.map
+declare namespace $ {
+
+	type __mol_vary_edit_1 = $mol_type_enforce<
+		Parameters< $mol_vary_edit['type_label'] >[0]
+		,
+		Parameters< ReturnType< $mol_vary_edit['Type'] >['option_label'] >[0]
+	>
+	type $mol_select__Filter_mol_vary_edit_2 = $mol_type_enforce<
+		any
+		,
+		ReturnType< $mol_select['Filter'] >
+	>
+	type $mol_select__Trigger_icon_mol_vary_edit_3 = $mol_type_enforce<
+		any
+		,
+		ReturnType< $mol_select['Trigger_icon'] >
+	>
+	type $mol_select__option_content_mol_vary_edit_4 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['type_option_content'] >
+		,
+		ReturnType< $mol_select['option_content'] >
+	>
+	type $mol_select__enabled_mol_vary_edit_5 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['type_mutable'] >
+		,
+		ReturnType< $mol_select['enabled'] >
+	>
+	type $mol_select__dictionary_mol_vary_edit_6 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['type_dict'] >
+		,
+		ReturnType< $mol_select['dictionary'] >
+	>
+	type $mol_select__value_mol_vary_edit_7 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['type'] >
+		,
+		ReturnType< $mol_select['value'] >
+	>
+	type $mol_drop__adopt_mol_vary_edit_8 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_adopt'] >
+		,
+		ReturnType< $mol_drop['adopt'] >
+	>
+	type $mol_drop__receive_mol_vary_edit_9 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['type_receive'] >
+		,
+		ReturnType< $mol_drop['receive'] >
+	>
+	type $mol_drop__Sub_mol_vary_edit_10 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['Type'] >
+		,
+		ReturnType< $mol_drop['Sub'] >
+	>
+	type $mol_check_box__checked_mol_vary_edit_11 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['bool'] >
+		,
+		ReturnType< $mol_check_box['checked'] >
+	>
+	type $mol_check_box__enabled_mol_vary_edit_12 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_check_box['enabled'] >
+	>
+	type $mol_bigint_field__value_mol_vary_edit_13 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['bint'] >
+		,
+		ReturnType< $mol_bigint_field['value'] >
+	>
+	type $mol_bigint_field__enabled_mol_vary_edit_14 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_bigint_field['enabled'] >
+	>
+	type $mol_bigint_field__selection_mol_vary_edit_15 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['text_selection'] >
+		,
+		ReturnType< $mol_bigint_field['selection'] >
+	>
+	type $mol_number__value_mol_vary_edit_16 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['real'] >
+		,
+		ReturnType< $mol_number['value'] >
+	>
+	type $mol_number__enabled_mol_vary_edit_17 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_number['enabled'] >
+	>
+	type $mol_number__selection_mol_vary_edit_18 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['text_selection'] >
+		,
+		ReturnType< $mol_number['selection'] >
+	>
+	type $mol_date__value_moment_mol_vary_edit_19 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['date'] >
+		,
+		ReturnType< $mol_date['value_moment'] >
+	>
+	type $mol_date__enabled_mol_vary_edit_20 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_date['enabled'] >
+	>
+	type $mol_textarea__value_mol_vary_edit_21 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['text'] >
+		,
+		ReturnType< $mol_textarea['value'] >
+	>
+	type $mol_textarea__enabled_mol_vary_edit_22 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_textarea['enabled'] >
+	>
+	type $mol_textarea__selection_mol_vary_edit_23 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['text_selection'] >
+		,
+		ReturnType< $mol_textarea['selection'] >
+	>
+	type $mol_check_expand__expanded_mol_vary_edit_24 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['expanded'] >
+		,
+		ReturnType< $mol_check_expand['expanded'] >
+	>
+	type $mol_button_minor__click_mol_vary_edit_25 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_add'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__enabled_mol_vary_edit_26 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__sub_mol_vary_edit_27 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_string__hint_mol_vary_edit_28 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_string['hint'] >
+	>
+	type $mol_string__submit_mol_vary_edit_29 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['field_add'] >
+		,
+		ReturnType< $mol_string['submit'] >
+	>
+	type $mol_string__enabled_mol_vary_edit_30 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_string['enabled'] >
+	>
+	type $mol_string__sub_mol_vary_edit_31 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_string['sub'] >
+	>
+	type $mol_bar__sub_mol_vary_edit_32 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_bar['sub'] >
+	>
+	type $mol_view__sub_mol_vary_edit_33 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	type $mol_drag__drag_end_mol_vary_edit_34 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_drag_end'] >
+		,
+		ReturnType< $mol_drag['drag_end'] >
+	>
+	type $mol_drag__transfer_mol_vary_edit_35 = $mol_type_enforce<
+		({ 
+			'text/plain': ReturnType< $mol_vary_edit['transfer_vary'] >,
+			'text/html': string,
+			'text/uri-list': ReturnType< $mol_vary_edit['transfer_vary'] >,
+		}) 
+		,
+		ReturnType< $mol_drag['transfer'] >
+	>
+	type $mol_drag__Sub_mol_vary_edit_36 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['Item_key'] >
+		,
+		ReturnType< $mol_drag['Sub'] >
+	>
+	type $mol_drop__adopt_mol_vary_edit_37 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_adopt'] >
+		,
+		ReturnType< $mol_drop['adopt'] >
+	>
+	type $mol_drop__receive_mol_vary_edit_38 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_receive'] >
+		,
+		ReturnType< $mol_drop['receive'] >
+	>
+	type $mol_drop__Sub_mol_vary_edit_39 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['Item_drag'] >
+		,
+		ReturnType< $mol_drop['Sub'] >
+	>
+	type $mol_vary_edit__enabled_mol_vary_edit_40 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['enabled'] >
+		,
+		ReturnType< $mol_vary_edit['enabled'] >
+	>
+	type $mol_vary_edit__value_mol_vary_edit_41 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_val'] >
+		,
+		ReturnType< $mol_vary_edit['value'] >
+	>
+	type $mol_vary_edit__selection_mol_vary_edit_42 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['item_selection'] >
+		,
+		ReturnType< $mol_vary_edit['selection'] >
+	>
+	type $mol_bar__sub_mol_vary_edit_43 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_bar['sub'] >
+	>
+	type $mol_list__rows_mol_vary_edit_44 = $mol_type_enforce<
+		ReturnType< $mol_vary_edit['body'] >
+		,
+		ReturnType< $mol_list['rows'] >
+	>
+	export class $mol_vary_edit extends $mol_list {
+		item_adopt( next?: any ): any
+		type_receive( next?: any ): any
+		type_label( id: any): ReturnType< ReturnType< $mol_vary_edit['Type'] >['option_label'] >
+		Type_icon( id: any): $mol_icon
+		type_option_content( id: any): readonly(any)[]
+		enabled( ): boolean
+		type_mutable( ): ReturnType< $mol_vary_edit['enabled'] >
+		type_dict( ): ({ 
+			'Null': string,
+			'Bool': string,
+			'Bint': string,
+			'Real': string,
+			'Text': string,
+			'List': string,
+			'Tupl': string,
+		}) 
+		type_auto( ): string
+		type( next?: ReturnType< $mol_vary_edit['type_auto'] > ): ReturnType< $mol_vary_edit['type_auto'] >
+		Type( ): $mol_select
+		Type_drop( ): $mol_drop
+		bool( next?: boolean ): boolean
+		Bool( ): $mol_check_box
+		bint( next?: bigint ): bigint
+		text_selection( next?: readonly(number)[] ): readonly(number)[]
+		Bint( ): $mol_bigint_field
+		real( next?: number ): number
+		Real( ): $mol_number
+		date( next?: $mol_time_moment ): $mol_time_moment
+		Date( ): $mol_date
+		text( next?: string ): string
+		Text( ): $mol_textarea
+		expanded( next?: boolean ): boolean
+		Item_expand( ): $mol_check_expand
+		item_add( next?: any ): any
+		Item_add_icon( ): $mol_icon_plus
+		Item_add( ): $mol_button_minor
+		field_add( next?: any ): any
+		Field_add_icon( ): $mol_icon_plus
+		Field_add( ): $mol_string
+		head( ): readonly(any)[]
+		Head( ): $mol_bar
+		item_receive( id: any, next?: any ): any
+		item_drag_end( id: any, next?: any ): any
+		transfer_vary( id: any): string
+		item_key( id: any): any
+		Item_key( id: any): $mol_view
+		Item_drag( id: any): $mol_drag
+		Item_drop( id: any): $mol_drop
+		item_val( id: any, next?: any ): any
+		item_selection( id: any, next?: readonly(any)[] ): readonly(any)[]
+		Item_val( id: any): $mol_vary_edit
+		Item( id: any): $mol_bar
+		body( ): readonly(any)[]
+		Body( ): $mol_list
+		schema( ): any
+		value( next?: any ): any
+		Vary( ): $mol_vary_class
+		selection( next?: readonly(any)[] ): readonly(any)[]
+		Null_icon( ): $mol_icon_circle_off_outline
+		Bool_icon( ): $mol_icon_flag_checkered
+		Bint_icon( ): $mol_icon_pound
+		Real_icon( ): $mol_icon_division
+		Date_icon( ): $mol_icon_clock_outline
+		Text_icon( ): $mol_icon_card_text_outline
+		List_icon( ): $mol_icon_format_list_bulleted
+		Tupl_icon( ): $mol_icon_table
+		rows( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=edit.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_vary_edit extends $.$mol_vary_edit {
+        Vary(): $mol_vary_class;
+        type(next?: string): any;
+        type_auto(): "Null" | "Bool" | "Bint" | "Real" | "Date" | "Text" | "List" | "Tupl";
+        type_mutable(): boolean;
+        type_option_content(type: string): readonly any[];
+        Type_icon(type: string): $mol_icon_flag_checkered | $mol_icon_pound | $mol_icon_division | $mol_icon_clock_outline | $mol_icon_card_text_outline | $mol_icon_format_list_bulleted | $mol_icon_table | $mol_icon_circle_off_outline;
+        bool(next?: boolean): boolean;
+        bint(next?: bigint): bigint;
+        real(next?: number): number;
+        date(next?: $mol_time_moment): $mol_time_moment;
+        text(next?: string): string;
+        list(next?: readonly unknown[]): readonly unknown[];
+        tupl(next?: [readonly string[], readonly unknown[]]): [readonly string[], readonly unknown[]];
+        head(): ($.$mol_string | $mol_button_minor | $.$mol_number | $.$mol_bigint_field | $.$mol_date | $.$mol_textarea)[];
+        body(): $mol_bar[];
+        item_key(index: number): string | number;
+        item_val(index: number, next?: unknown): unknown;
+        item_add(): void;
+        field_add(): void;
+        text_selection(next?: readonly number[]): readonly number[];
+        item_selection(index: number, next?: readonly [path: string, begin: number, end: number]): readonly [path: string, begin: number, end: number];
+        _last_drop_index: number;
+        transfer_vary(index: number): string;
+        item_adopt(transfer: DataTransfer): unknown[] | null;
+        type_receive([val, key]: [any, string]): void;
+        item_receive(index: number, [val, key]: [any, string]): void;
+        item_drag_end(index: number, event: DragEvent): void;
+    }
+}
+
+declare namespace $.$$ {
+}
+
+declare namespace $ {
+
+	export class $mol_icon_link extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=link.view.tree.d.ts.map
+declare namespace $ {
+
+	type $giper_baza_link_chip__link_giper_baza_vary_edit_1 = $mol_type_enforce<
+		ReturnType< $giper_baza_vary_edit['link'] >
+		,
+		ReturnType< $giper_baza_link_chip['link'] >
+	>
+	export class $giper_baza_vary_edit extends $mol_vary_edit {
+		link( ): $giper_baza_link
+		Vary( ): $mol_vary_class
+		Link_icon( ): $mol_icon_link
+		Link( ): $giper_baza_link_chip
+		type_dict( ): ({ 
+			'Link': string,
+		})  & ReturnType< $mol_vary_edit['type_dict'] >
+	}
+	
+}
+
+//# sourceMappingURL=edit.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $giper_baza_vary_edit extends $.$giper_baza_vary_edit {
+        get $(): typeof $$;
+        type(next?: string): string;
+        type_auto(): string;
+        Type_icon(type: string): $mol_icon;
+        link(next?: $giper_baza_link): $giper_baza_link;
+        head(): readonly any[];
+    }
+}
+
+declare namespace $ {
+
+	export class $giper_baza_unit_sand_dump extends $giper_baza_vary_edit {
+		land( ): $giper_baza_land
+		sand( ): $giper_baza_unit_sand
+	}
+	
+}
+
+//# sourceMappingURL=dump.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $giper_baza_unit_sand_dump extends $.$giper_baza_unit_sand_dump {
+        value(next?: $giper_baza_vary_type): $giper_baza_vary_type;
+    }
+}
+
+declare namespace $.$$ {
+}
+
+declare namespace $ {
     let $giper_baza_text_tokens: $mol_regexp<{
         [x: string]: string;
         readonly token: string;
-        readonly link: string;
+        readonly space: string;
         readonly emoji: string;
         readonly 'line-break': string;
         readonly indents: string;
@@ -40413,7 +41693,7 @@ declare namespace $ {
         readonly word: string;
         readonly spaces: string;
         readonly others: string;
-        readonly space: string;
+        readonly link: string;
         readonly win_end: string;
         readonly mac_end: string;
     }>;
@@ -40432,6 +41712,567 @@ declare namespace $ {
         point_by_offset(offset: number): readonly [head: string, x: number, y: number];
         offset_by_point([self, offset]: readonly [head: string, x: number, y: number]): readonly [head: string, pos: number];
         selection(lord: $giper_baza_link, next?: readonly [begin: number, end: number]): readonly [begin: number, end: number];
+    }
+}
+
+/** @jsx $mol_jsx */
+/** @jsxFrag $mol_jsx_frag */
+declare namespace $ {
+    class $giper_baza_rich extends $giper_baza_pawn {
+        dom(next?: (Element | Attr | Text)[]): (Element | Attr | Text)[];
+        html(next?: string): string;
+        selection(lord: $giper_baza_link, next?: readonly [from: readonly [self: string, x: number, y: number], to: readonly [self: string, x: number, y: number]]): Exclude<typeof next, undefined>;
+    }
+}
+
+declare namespace $ {
+
+	export class $mol_icon_content_paste extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=paste.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_marker extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=marker.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_format_size extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=size.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_order_bool_ascending extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=ascending.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_order_numeric_ascending extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=ascending.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_comment extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=comment.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_comment_quote extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=quote.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_comment_quote_outline extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=outline.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_xml extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=xml.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_arrow_collapse extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=collapse.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_icon_arrow_collapse_left extends $mol_icon {
+		path( ): string
+	}
+	
+}
+
+//# sourceMappingURL=left.view.tree.d.ts.map
+declare namespace $ {
+    function $mol_jsx_attach<Result>(next: typeof $mol_jsx_document, action: () => Result): Result;
+}
+
+declare namespace $ {
+    class $mol_dom_point extends Object {
+        readonly node: Node;
+        readonly pos: number;
+        constructor(node: Node, pos: number);
+        /** Iterator for deep comparison. */
+        [Symbol.iterator](): ArrayIterator<number | Node>;
+        /** Point after start of the node. */
+        static head(node: Node): $mol_dom_point;
+        /** Point before end of the node. */
+        static foot(node: Node): $mol_dom_point;
+        /** Point after end of the node. */
+        static tail(node: Node): $mol_dom_point;
+        /** Is point after start of the node. */
+        is_head(): boolean;
+        /** Is point before end of the node. */
+        is_foot(): boolean;
+        /** Is point after end of the node. */
+        is_tail(): boolean;
+        /** Point after start of the node. */
+        head(): $mol_dom_point;
+        /** Point before end of the node. */
+        foot(): $mol_dom_point;
+        /** Point after end of the node. */
+        tail(): $mol_dom_point;
+        native(): readonly [Node, number];
+        /** Point near the node. -1: before, +1: after. */
+        static near(node: Node, axis: -1 | 1): $mol_dom_point | null;
+        /** Point near the node. -1: before, +1: after. */
+        jump(axis: -1 | 1): $mol_dom_point | null;
+        /** Point at one step in some direction. */
+        move_step(axis: -1 | 1): $mol_dom_point | null;
+        move_chars(root: Element, offset: number): $mol_dom_point;
+    }
+}
+
+declare namespace $ {
+    class $mol_dom_range extends Object {
+        readonly anchor: $mol_dom_point;
+        readonly extend: $mol_dom_point;
+        constructor(anchor: $mol_dom_point, extend: $mol_dom_point);
+        /** Iterator for deep comparison. */
+        [Symbol.iterator](): ArrayIterator<$mol_dom_point>;
+        /** Makes range from selection with direction storing. */
+        static from_selection(sel?: Selection): $mol_dom_range | null;
+        /** Converts from native Range. */
+        static from_native(range: Range): $mol_dom_range;
+        /** Surrounds whole node content. */
+        static inside(node: Node): $mol_dom_range;
+        /** Around node itself. */
+        static around(node: Node): $mol_dom_range;
+        /** Deeper Element which contain whole selection. */
+        container(): Node;
+        /** Has now content. */
+        is_empty(): boolean;
+        /** Swap start and end points. */
+        swap(): $mol_dom_range;
+        /** Returns new range expanded outside by one point steps. */
+        expand(): $mol_dom_range;
+        /** Returns fragment of cloned content. */
+        copy(): DocumentFragment;
+        /** Removes all content and returns new collapsed range. */
+        clear(): $mol_dom_range;
+        /** Removes all content and inserts given instead. */
+        paste(node: Node): $mol_dom_range;
+        /** Wraps content by given element. */
+        surround(el: Element): $mol_dom_range;
+        /**
+         * Returns position of point relate to this range.
+         * Before: -1
+         * Inside: 0
+         * After: +1
+         */
+        point_compare(point: $mol_dom_point): number;
+        /** Is given range inside this. */
+        range_contains(range: $mol_dom_range): boolean;
+        /**
+         * Returns point which bounded by this range.
+         * Actualy returns middle of three points: anchor, given point, extend.
+         */
+        point_bound(point: $mol_dom_point): $mol_dom_point;
+        /** Returns new range which bounded by giiven. */
+        range_bounds(range: $mol_dom_range): $mol_dom_range;
+        /** Aim selection to this range. */
+        select(): this;
+        /**
+         * Returns native DOM Range object.
+         * It's always forward direction.
+         */
+        native(): Range;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	type $mol_hotkey2__action_giper_baza_rich_edit_1 = $mol_type_enforce<
+		({ 
+			alt_S( next?: ReturnType< $giper_baza_rich_edit['inline_toggle'] > ): ReturnType< $giper_baza_rich_edit['inline_toggle'] >,
+			alt_E( next?: ReturnType< $giper_baza_rich_edit['inline_toggle'] > ): ReturnType< $giper_baza_rich_edit['inline_toggle'] >,
+			alt_I( next?: ReturnType< $giper_baza_rich_edit['inline_toggle'] > ): ReturnType< $giper_baza_rich_edit['inline_toggle'] >,
+			alt_R( next?: ReturnType< $giper_baza_rich_edit['inline_toggle'] > ): ReturnType< $giper_baza_rich_edit['inline_toggle'] >,
+			alt_C( next?: ReturnType< $giper_baza_rich_edit['inline_toggle'] > ): ReturnType< $giper_baza_rich_edit['inline_toggle'] >,
+			alt_T( next?: ReturnType< $giper_baza_rich_edit['block_wrap'] > ): ReturnType< $giper_baza_rich_edit['block_wrap'] >,
+			alt_Q( next?: ReturnType< $giper_baza_rich_edit['block_wrap'] > ): ReturnType< $giper_baza_rich_edit['block_wrap'] >,
+			alt_U( next?: ReturnType< $giper_baza_rich_edit['block_wrap'] > ): ReturnType< $giper_baza_rich_edit['block_wrap'] >,
+			alt_O( next?: ReturnType< $giper_baza_rich_edit['block_wrap'] > ): ReturnType< $giper_baza_rich_edit['block_wrap'] >,
+			alt_P( next?: ReturnType< $giper_baza_rich_edit['block_wrap'] > ): ReturnType< $giper_baza_rich_edit['block_wrap'] >,
+			tab( next?: ReturnType< $giper_baza_rich_edit['block_rewrap'] > ): ReturnType< $giper_baza_rich_edit['block_rewrap'] >,
+			shift_tab( next?: ReturnType< $giper_baza_rich_edit['block_unwrap'] > ): ReturnType< $giper_baza_rich_edit['block_unwrap'] >,
+		}) 
+		,
+		ReturnType< $mol_hotkey2['action'] >
+	>
+	type $mol_button_minor__title_giper_baza_rich_edit_2 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['title'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_3 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_4 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_5 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['inline_toggle'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__title_giper_baza_rich_edit_6 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['title'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_7 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_8 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_9 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['inline_toggle'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__title_giper_baza_rich_edit_10 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['title'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_11 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_12 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_13 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['inline_toggle'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__title_giper_baza_rich_edit_14 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['title'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_15 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_16 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_17 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['inline_toggle'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__title_giper_baza_rich_edit_18 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['title'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_19 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_20 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_21 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['inline_toggle'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_pick__hint_giper_baza_rich_edit_22 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_pick['hint'] >
+	>
+	type $mol_pick__trigger_content_giper_baza_rich_edit_23 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_pick['trigger_content'] >
+	>
+	type $mol_pick__bubble_content_giper_baza_rich_edit_24 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_pick['bubble_content'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_25 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_26 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_27 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['block_wrap'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__sub_giper_baza_rich_edit_28 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_29 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_30 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_31 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['block_wrap'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__sub_giper_baza_rich_edit_32 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_33 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_34 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_35 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['block_wrap'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__sub_giper_baza_rich_edit_36 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_37 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_38 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_39 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['block_wrap'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__sub_giper_baza_rich_edit_40 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_41 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_42 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_43 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['block_wrap'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__sub_giper_baza_rich_edit_44 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_button_minor__hint_giper_baza_rich_edit_45 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['hint'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_rich_edit_46 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['selected'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_rich_edit_47 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['block_unwrap'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__sub_giper_baza_rich_edit_48 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_button_minor['sub'] >
+	>
+	type $mol_float__sub_giper_baza_rich_edit_49 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_float['sub'] >
+	>
+	type $mol_view__attr_giper_baza_rich_edit_50 = $mol_type_enforce<
+		({ 
+			'contenteditable': ReturnType< $giper_baza_rich_edit['editable'] >,
+		}) 
+		,
+		ReturnType< $mol_view['attr'] >
+	>
+	type $mol_view__event_giper_baza_rich_edit_51 = $mol_type_enforce<
+		({ 
+			input( next?: ReturnType< $giper_baza_rich_edit['save'] > ): ReturnType< $giper_baza_rich_edit['save'] >,
+			paste( next?: ReturnType< $giper_baza_rich_edit['paste'] > ): ReturnType< $giper_baza_rich_edit['paste'] >,
+			pointermove( next?: ReturnType< $giper_baza_rich_edit['hover'] > ): ReturnType< $giper_baza_rich_edit['hover'] >,
+		}) 
+		,
+		ReturnType< $mol_view['event'] >
+	>
+	type $mol_view__sub_giper_baza_rich_edit_52 = $mol_type_enforce<
+		ReturnType< $giper_baza_rich_edit['content'] >
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	export class $giper_baza_rich_edit extends $mol_view {
+		enabled( ): boolean
+		selection_load( ): any
+		selection_sync( ): any
+		inline_toggle( id: any, next?: any ): any
+		block_wrap( id: any, next?: any ): any
+		block_rewrap( next?: any ): any
+		block_unwrap( next?: any ): any
+		Hotkey( ): $mol_hotkey2
+		Inline_format_menu_icon( ): $mol_icon_marker
+		selected( next?: boolean ): boolean
+		Strong_button( ): $mol_button_minor
+		Em_button( ): $mol_button_minor
+		Ins_button( ): $mol_button_minor
+		Del_button( ): $mol_button_minor
+		Code_button( ): $mol_button_minor
+		Inline_format_menu( ): $mol_pick
+		Section_icon( ): $mol_icon_format_size
+		Section_button( ): $mol_button_minor
+		List_bullet_icon( ): $mol_icon_order_bool_ascending
+		List_bullet_button( ): $mol_button_minor
+		List_number_icon( ): $mol_icon_order_numeric_ascending
+		List_number_button( ): $mol_button_minor
+		Quote_icon( ): $mol_icon_comment_quote_outline
+		Quote_button( ): $mol_button_minor
+		Preformat_icon( ): $mol_icon_xml
+		Preformat_button( ): $mol_button_minor
+		Decrease_icon( ): $mol_icon_arrow_collapse_left
+		Unwrap_button( ): $mol_button_minor
+		Tools( ): $mol_float
+		editable( next?: string ): string
+		save( next?: any ): any
+		paste( next?: any ): any
+		hover( next?: any ): any
+		content( ): readonly(any)[]
+		Content( ): $mol_view
+		pawn( next?: $giper_baza_rich ): $giper_baza_rich
+		attr( ): ({ 
+			'giper_baza_rich_edit_enabled': ReturnType< $giper_baza_rich_edit['enabled'] >,
+		})  & ReturnType< $mol_view['attr'] >
+		hint( ): string
+		auto( ): readonly(any)[]
+		plugins( ): readonly(any)[]
+		sub( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=edit.view.tree.d.ts.map
+/** @jsx $mol_jsx */
+/** @jsxFrag $mol_jsx_frag */
+declare namespace $.$$ {
+    class $giper_baza_rich_edit extends $.$giper_baza_rich_edit {
+        editable(next?: string | null): string;
+        sub(): $mol_view[];
+        content(): ChildNode[];
+        selection(next?: readonly [from: readonly [self: string, x: number, y: number], to: readonly [self: string, x: number, y: number]]): readonly [from: readonly [self: string, x: number, y: number], to: readonly [self: string, x: number, y: number]];
+        save(event?: Event): void;
+        selection_sync(): $mol_dom_listener;
+        selected(): boolean;
+        selection_save(): void;
+        selection_load(): void;
+        block_wrap(Type: string, event: KeyboardEvent): void;
+        block_unwrap(event: KeyboardEvent): void;
+        /** Wraps selecion to given element type. */
+        inline_toggle(Type: string, event: KeyboardEvent): void;
+        paste(event?: ClipboardEvent): void;
+        hover(event: PointerEvent): void;
     }
 }
 
@@ -40524,266 +42365,251 @@ declare namespace $ {
 		,
 		ReturnType< $giper_baza_flex_form['pawn'] >
 	>
-	type $mol_button_minor__clicks_giper_baza_flex_field_13 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_item_kill'] >
+	type $mol_select__enabled_giper_baza_flex_field_13 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
-		ReturnType< $mol_button_minor['clicks'] >
+		ReturnType< $mol_select['enabled'] >
 	>
-	type $mol_button_minor__hint_giper_baza_flex_field_14 = $mol_type_enforce<
+	type $mol_select__value_giper_baza_flex_field_14 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_pick'] >
+		,
+		ReturnType< $mol_select['value'] >
+	>
+	type $mol_select__options_giper_baza_flex_field_15 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['link_options'] >
+		,
+		ReturnType< $mol_select['options'] >
+	>
+	type $mol_select__option_label_giper_baza_flex_field_16 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['link_label'] >
+		,
+		ReturnType< $mol_select['option_label'] >
+	>
+	type $mol_button_minor__enabled_giper_baza_flex_field_17 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['enabled'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_flex_field_18 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_item_add'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__title_giper_baza_flex_field_19 = $mol_type_enforce<
 		string
 		,
-		ReturnType< $mol_button_minor['hint'] >
+		ReturnType< $mol_button_minor['title'] >
 	>
-	type $mol_button_minor__sub_giper_baza_flex_field_15 = $mol_type_enforce<
+	type $mol_button_minor__enabled_giper_baza_flex_field_20 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['enabled'] >
+		,
+		ReturnType< $mol_button_minor['enabled'] >
+	>
+	type $mol_button_minor__click_giper_baza_flex_field_21 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_item_paste'] >
+		,
+		ReturnType< $mol_button_minor['click'] >
+	>
+	type $mol_button_minor__title_giper_baza_flex_field_22 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_button_minor['title'] >
+	>
+	type $mol_button_minor__sub_giper_baza_flex_field_23 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_button_minor['sub'] >
 	>
-	type $giper_baza_unit_sand_dump__land_giper_baza_flex_field_16 = $mol_type_enforce<
+	type $mol_bar__sub_giper_baza_flex_field_24 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_tools'] >
+		,
+		ReturnType< $mol_bar['sub'] >
+	>
+	type $mol_drop__adopt_giper_baza_flex_field_25 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_item_adopt'] >
+		,
+		ReturnType< $mol_drop['adopt'] >
+	>
+	type $mol_drop__receive_giper_baza_flex_field_26 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_receive'] >
+		,
+		ReturnType< $mol_drop['receive'] >
+	>
+	type $mol_drop__allow_giper_baza_flex_field_27 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_drop['allow'] >
+	>
+	type $mol_drop__Sub_giper_baza_flex_field_28 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['List_tools'] >
+		,
+		ReturnType< $mol_drop['Sub'] >
+	>
+	type $giper_baza_unit_sand_dump__land_giper_baza_flex_field_29 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['land'] >
 		,
 		ReturnType< $giper_baza_unit_sand_dump['land'] >
 	>
-	type $giper_baza_unit_sand_dump__sand_giper_baza_flex_field_17 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_sand'] >
+	type $giper_baza_unit_sand_dump__sand_giper_baza_flex_field_30 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['list_item_sand'] >
 		,
 		ReturnType< $giper_baza_unit_sand_dump['sand'] >
 	>
-	type $mol_view__sub_giper_baza_flex_field_18 = $mol_type_enforce<
-		readonly(any)[]
+	type $giper_baza_unit_sand_dump__enabled_giper_baza_flex_field_31 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
-		ReturnType< $mol_view['sub'] >
+		ReturnType< $giper_baza_unit_sand_dump['enabled'] >
 	>
-	type $mol_drag__end_giper_baza_flex_field_19 = $mol_type_enforce<
+	type $mol_drag__end_giper_baza_flex_field_32 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['list_item_drag_end'] >
 		,
 		ReturnType< $mol_drag['end'] >
 	>
-	type $mol_drag__transfer_giper_baza_flex_field_20 = $mol_type_enforce<
+	type $mol_drag__transfer_giper_baza_flex_field_33 = $mol_type_enforce<
 		({ 
-			'text/plain': ReturnType< $giper_baza_flex_field['list_item_value'] >,
+			'text/plain': ReturnType< $giper_baza_flex_field['list_item_text'] >,
 			'text/html': ReturnType< $giper_baza_flex_field['list_item_html'] >,
 			'text/uri-list': ReturnType< $giper_baza_flex_field['list_item_uri'] >,
 		}) 
 		,
 		ReturnType< $mol_drag['transfer'] >
 	>
-	type $mol_drag__Sub_giper_baza_flex_field_21 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['List_item_content'] >
+	type $mol_drag__Sub_giper_baza_flex_field_34 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['List_item_dump'] >
 		,
 		ReturnType< $mol_drag['Sub'] >
 	>
-	type $mol_drop__adopt_giper_baza_flex_field_22 = $mol_type_enforce<
+	type $mol_drop__adopt_giper_baza_flex_field_35 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['list_item_adopt'] >
 		,
 		ReturnType< $mol_drop['adopt'] >
 	>
-	type $mol_drop__receive_giper_baza_flex_field_23 = $mol_type_enforce<
+	type $mol_drop__receive_giper_baza_flex_field_36 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['list_item_receive'] >
 		,
 		ReturnType< $mol_drop['receive'] >
 	>
-	type $mol_drop__allow_giper_baza_flex_field_24 = $mol_type_enforce<
+	type $mol_drop__allow_giper_baza_flex_field_37 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_drop['allow'] >
 	>
-	type $mol_drop__Sub_giper_baza_flex_field_25 = $mol_type_enforce<
+	type $mol_drop__Sub_giper_baza_flex_field_38 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['List_item_drag'] >
 		,
 		ReturnType< $mol_drop['Sub'] >
 	>
-	type $mol_list__rows_giper_baza_flex_field_26 = $mol_type_enforce<
+	type $mol_list__rows_giper_baza_flex_field_39 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['list_items'] >
 		,
 		ReturnType< $mol_list['rows'] >
 	>
-	type $mol_select__enabled_giper_baza_flex_field_27 = $mol_type_enforce<
+	type $mol_select__enabled_giper_baza_flex_field_40 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
 		ReturnType< $mol_select['enabled'] >
 	>
-	type $mol_select__value_giper_baza_flex_field_28 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_pick'] >
-		,
-		ReturnType< $mol_select['value'] >
-	>
-	type $mol_select__options_giper_baza_flex_field_29 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['link_options'] >
-		,
-		ReturnType< $mol_select['options'] >
-	>
-	type $mol_select__option_label_giper_baza_flex_field_30 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['link_label'] >
-		,
-		ReturnType< $mol_select['option_label'] >
-	>
-	type $mol_button_minor__enabled_giper_baza_flex_field_31 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['enabled'] >
-		,
-		ReturnType< $mol_button_minor['enabled'] >
-	>
-	type $mol_button_minor__click_giper_baza_flex_field_32 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_item_add'] >
-		,
-		ReturnType< $mol_button_minor['click'] >
-	>
-	type $mol_button_minor__title_giper_baza_flex_field_33 = $mol_type_enforce<
-		string
-		,
-		ReturnType< $mol_button_minor['title'] >
-	>
-	type $mol_string__enabled_giper_baza_flex_field_34 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['enabled'] >
-		,
-		ReturnType< $mol_string['enabled'] >
-	>
-	type $mol_string__value_giper_baza_flex_field_35 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_item_link_value'] >
-		,
-		ReturnType< $mol_string['value'] >
-	>
-	type $mol_string__submit_giper_baza_flex_field_36 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_item_link'] >
-		,
-		ReturnType< $mol_string['submit'] >
-	>
-	type $mol_string__hint_giper_baza_flex_field_37 = $mol_type_enforce<
-		string
-		,
-		ReturnType< $mol_string['hint'] >
-	>
-	type $mol_bar__sub_giper_baza_flex_field_38 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_tools'] >
-		,
-		ReturnType< $mol_bar['sub'] >
-	>
-	type $mol_drop__adopt_giper_baza_flex_field_39 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_item_adopt'] >
-		,
-		ReturnType< $mol_drop['adopt'] >
-	>
-	type $mol_drop__receive_giper_baza_flex_field_40 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['list_receive'] >
-		,
-		ReturnType< $mol_drop['receive'] >
-	>
-	type $mol_drop__allow_giper_baza_flex_field_41 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_drop['allow'] >
-	>
-	type $mol_drop__Sub_giper_baza_flex_field_42 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['List_tools'] >
-		,
-		ReturnType< $mol_drop['Sub'] >
-	>
-	type $mol_select__enabled_giper_baza_flex_field_43 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['enabled'] >
-		,
-		ReturnType< $mol_select['enabled'] >
-	>
-	type $mol_select__value_giper_baza_flex_field_44 = $mol_type_enforce<
+	type $mol_select__value_giper_baza_flex_field_41 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enum'] >
 		,
 		ReturnType< $mol_select['value'] >
 	>
-	type $mol_select__options_giper_baza_flex_field_45 = $mol_type_enforce<
+	type $mol_select__options_giper_baza_flex_field_42 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enum_options'] >
 		,
 		ReturnType< $mol_select['options'] >
 	>
-	type $mol_select__option_label_giper_baza_flex_field_46 = $mol_type_enforce<
+	type $mol_select__option_label_giper_baza_flex_field_43 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enum_label'] >
 		,
 		ReturnType< $mol_select['option_label'] >
 	>
-	type $mol_check_box__enabled_giper_baza_flex_field_47 = $mol_type_enforce<
+	type $giper_baza_vary_edit__enabled_giper_baza_flex_field_44 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
-		ReturnType< $mol_check_box['enabled'] >
+		ReturnType< $giper_baza_vary_edit['enabled'] >
 	>
-	type $mol_check_box__checked_giper_baza_flex_field_48 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['bool'] >
+	type $giper_baza_vary_edit__value_giper_baza_flex_field_45 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['atom_value'] >
 		,
-		ReturnType< $mol_check_box['checked'] >
+		ReturnType< $giper_baza_vary_edit['value'] >
 	>
-	type $mol_number__enabled_giper_baza_flex_field_49 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['enabled'] >
+	type $giper_baza_vary_edit__schema_giper_baza_flex_field_46 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['schema'] >
 		,
-		ReturnType< $mol_number['enabled'] >
+		ReturnType< $giper_baza_vary_edit['schema'] >
 	>
-	type $mol_number__value_giper_baza_flex_field_50 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['int'] >
+	type $giper_baza_vary_edit__selection_giper_baza_flex_field_47 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['atom_selection'] >
 		,
-		ReturnType< $mol_number['value'] >
+		ReturnType< $giper_baza_vary_edit['selection'] >
 	>
-	type $mol_number__enabled_giper_baza_flex_field_51 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['enabled'] >
-		,
-		ReturnType< $mol_number['enabled'] >
-	>
-	type $mol_number__value_giper_baza_flex_field_52 = $mol_type_enforce<
-		ReturnType< $giper_baza_flex_field['real'] >
-		,
-		ReturnType< $mol_number['value'] >
-	>
-	type $mol_bar__sub_giper_baza_flex_field_53 = $mol_type_enforce<
+	type $mol_bar__sub_giper_baza_flex_field_48 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['link_content'] >
 		,
 		ReturnType< $mol_bar['sub'] >
 	>
-	type $mol_textarea__enabled_giper_baza_flex_field_54 = $mol_type_enforce<
+	type $mol_textarea__enabled_giper_baza_flex_field_49 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
 		ReturnType< $mol_textarea['enabled'] >
 	>
-	type $mol_textarea__value_giper_baza_flex_field_55 = $mol_type_enforce<
+	type $mol_textarea__value_giper_baza_flex_field_50 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['str'] >
 		,
 		ReturnType< $mol_textarea['value'] >
 	>
-	type $mol_textarea__selection_giper_baza_flex_field_56 = $mol_type_enforce<
+	type $mol_textarea__selection_giper_baza_flex_field_51 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['str_selection'] >
 		,
 		ReturnType< $mol_textarea['selection'] >
 	>
-	type $mol_date__enabled_giper_baza_flex_field_57 = $mol_type_enforce<
+	type $mol_date__enabled_giper_baza_flex_field_52 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
 		ReturnType< $mol_date['enabled'] >
 	>
-	type $mol_date__value_moment_giper_baza_flex_field_58 = $mol_type_enforce<
+	type $mol_date__value_moment_giper_baza_flex_field_53 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['time'] >
 		,
 		ReturnType< $mol_date['value_moment'] >
 	>
-	type $mol_expander__title_giper_baza_flex_field_59 = $mol_type_enforce<
+	type $mol_expander__title_giper_baza_flex_field_54 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['dict_title'] >
 		,
 		ReturnType< $mol_expander['title'] >
 	>
-	type $mol_expander__content_giper_baza_flex_field_60 = $mol_type_enforce<
+	type $mol_expander__content_giper_baza_flex_field_55 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_expander['content'] >
 	>
-	type $mol_textarea__enabled_giper_baza_flex_field_61 = $mol_type_enforce<
+	type $mol_textarea__enabled_giper_baza_flex_field_56 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['enabled'] >
 		,
 		ReturnType< $mol_textarea['enabled'] >
 	>
-	type $mol_textarea__value_giper_baza_flex_field_62 = $mol_type_enforce<
+	type $mol_textarea__value_giper_baza_flex_field_57 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['text'] >
 		,
 		ReturnType< $mol_textarea['value'] >
 	>
-	type $mol_textarea__selection_giper_baza_flex_field_63 = $mol_type_enforce<
+	type $mol_textarea__selection_giper_baza_flex_field_58 = $mol_type_enforce<
 		ReturnType< $giper_baza_flex_field['text_selection'] >
 		,
 		ReturnType< $mol_textarea['selection'] >
 	>
-	type $mol_list__rows_giper_baza_flex_field_64 = $mol_type_enforce<
+	type $giper_baza_rich_edit__enabled_giper_baza_flex_field_59 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['enabled'] >
+		,
+		ReturnType< $giper_baza_rich_edit['enabled'] >
+	>
+	type $giper_baza_rich_edit__pawn_giper_baza_flex_field_60 = $mol_type_enforce<
+		ReturnType< $giper_baza_flex_field['rich_pawn'] >
+		,
+		ReturnType< $giper_baza_rich_edit['pawn'] >
+	>
+	type $mol_list__rows_giper_baza_flex_field_61 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_list['rows'] >
@@ -40794,9 +42620,9 @@ declare namespace $ {
 		enum( next?: any ): any
 		enum_options( ): readonly(any)[]
 		enum_label( id: any): string
-		bool( next?: boolean ): boolean
-		int( next?: number ): number
-		real( next?: number ): number
+		atom_value( next?: any ): any
+		schema( ): any
+		atom_selection( next?: readonly(any)[] ): readonly(any)[]
 		link_value( ): any
 		Link_dump( ): $giper_baza_unit_sand_dump
 		link( next?: any ): any
@@ -40815,47 +42641,43 @@ declare namespace $ {
 		Dict_form( ): $giper_baza_flex_form
 		text( next?: string ): string
 		text_selection( next?: readonly(any)[] ): readonly(any)[]
+		rich_pawn( next?: $giper_baza_rich ): $giper_baza_rich
 		list_item_adopt( next?: any ): any
-		list_item_receive( id: any, next?: any ): any
-		list_item_drag_end( id: any, next?: any ): any
-		list_item_value( id: any): string
-		list_item_html( id: any): string
-		list_item_uri( id: any): string
-		list_item_kill( id: any, next?: any ): any
-		List_item_kill_icon( id: any): $mol_icon_close
-		List_item_kill( id: any): $mol_button_minor
-		list_sand( id: any): $giper_baza_unit_sand
-		List_item_dump( id: any): $giper_baza_unit_sand_dump
-		List_item_content( id: any): $mol_view
-		List_item_drag( id: any): $mol_drag
-		List_item_drop( id: any): $mol_drop
-		List_item( id: any): ReturnType< $giper_baza_flex_field['List_item_drop'] >
-		list_items( ): readonly(any)[]
-		List_items( ): $mol_list
 		list_receive( next?: any ): any
 		list_pick( next?: any ): any
 		List_pick( ): $mol_select
 		list_item_add( next?: any ): any
 		List_item_add( ): $mol_button_minor
-		list_item_link_value( next?: string ): string
-		list_item_link( next?: any ): any
-		List_item_link( ): $mol_string
+		list_item_paste( next?: any ): any
+		List_item_paste_icon( ): $mol_icon_content_paste
+		List_item_paste( ): $mol_button_minor
 		list_tools( ): readonly(any)[]
 		List_tools( ): $mol_bar
 		List_drop( ): $mol_drop
+		list_item_receive( id: any, next?: any ): any
+		list_item_drag_end( id: any, next?: any ): any
+		list_item_text( id: any): string
+		list_item_html( id: any): string
+		list_item_uri( id: any): string
+		list_item_sand( id: any): $giper_baza_unit_sand
+		List_item_dump( id: any): $giper_baza_unit_sand_dump
+		List_item_drag( id: any): $mol_drag
+		List_item_drop( id: any): $mol_drop
+		List_item( id: any): ReturnType< $giper_baza_flex_field['List_item_drop'] >
+		list_items( ): readonly(any)[]
+		List_items( ): $mol_list
 		sub( ): readonly(any)[]
 		pawn( next?: $giper_baza_pawn ): $giper_baza_pawn
 		land( ): ReturnType< ReturnType< $giper_baza_flex_field['pawn'] >['land'] >
 		prop( ): $giper_baza_flex_prop
 		Enum( ): $mol_select
-		Bool( ): $mol_check_box
-		Int( ): $mol_number
-		Real( ): $mol_number
+		Atom( ): $giper_baza_vary_edit
 		Ref( ): $mol_bar
 		Str( ): $mol_textarea
 		Time( ): $mol_date
 		Dict( ): $mol_expander
 		Text( ): $mol_textarea
+		Rich( ): $giper_baza_rich_edit
 		List( ): $mol_list
 	}
 	
@@ -40865,18 +42687,17 @@ declare namespace $ {
 declare namespace $.$$ {
     class $giper_baza_flex_field extends $.$giper_baza_flex_field {
         dict_pawn(): $giper_baza_dict;
-        Sub(): $.$mol_list | $.$mol_expander | $.$mol_select | $.$mol_number | $.$mol_textarea | $.$mol_date | $mol_check_box | $mol_bar;
+        schema(): "Bool" | "Bint" | "Real" | "Text" | null;
+        Sub(): $.$mol_list | $.$mol_expander | $.$mol_select | $mol_bar | $.$mol_textarea | $.$giper_baza_vary_edit | $.$giper_baza_rich_edit;
         enum(next?: $giper_baza_vary_type): string | number | bigint | boolean | Element | Uint8Array<ArrayBuffer> | $giper_baza_link | Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer> | BigUint64Array<ArrayBuffer> | Int8Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Int32Array<ArrayBuffer> | BigInt64Array<ArrayBuffer> | Float64Array<ArrayBuffer> | Float32Array<ArrayBuffer> | $mol_time_moment | $mol_time_duration | $mol_time_interval | $mol_tree2 | readonly $giper_baza_vary_type[] | Readonly<{
             [x: string]: $giper_baza_vary_type;
         }> | null;
         enum_options(): readonly $giper_baza_vary_type[];
         enum_label(option: $giper_baza_vary_type): string;
-        bool(next?: boolean): boolean;
-        int(next?: number): number;
-        real(next?: number): number;
-        str(next?: string): string;
-        str_selection(next?: readonly [begin: number, end: number]): number[] | readonly [begin: number, end: number];
-        time(next?: $mol_time_moment): $mol_time_moment;
+        atom_value(next?: $giper_baza_vary_type): string | number | bigint | boolean | Element | Uint8Array<ArrayBuffer> | $giper_baza_link | Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer> | BigUint64Array<ArrayBuffer> | Int8Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Int32Array<ArrayBuffer> | BigInt64Array<ArrayBuffer> | Float64Array<ArrayBuffer> | Float32Array<ArrayBuffer> | $mol_time_moment | $mol_time_duration | $mol_time_interval | $mol_tree2 | readonly $giper_baza_vary_type[] | Readonly<{
+            [x: string]: $giper_baza_vary_type;
+        }> | null;
+        atom_selection(next?: readonly [path: string, begin: number, end: number]): (string | number)[] | readonly [path: string, begin: number, end: number];
         link(next?: $giper_baza_link): null;
         link_content(): ($.$mol_select | $.$giper_baza_unit_sand_dump)[];
         link_value(): string | number | bigint | boolean | Element | Uint8Array<ArrayBuffer> | $giper_baza_link | Uint16Array<ArrayBuffer> | Uint32Array<ArrayBuffer> | BigUint64Array<ArrayBuffer> | Int8Array<ArrayBuffer> | Int16Array<ArrayBuffer> | Int32Array<ArrayBuffer> | BigInt64Array<ArrayBuffer> | Float64Array<ArrayBuffer> | Float32Array<ArrayBuffer> | $mol_time_moment | $mol_time_duration | $mol_time_interval | $mol_tree2 | readonly $giper_baza_vary_type[] | Readonly<{
@@ -40888,19 +42709,20 @@ declare namespace $.$$ {
         link_new(rights?: string): null;
         text(next?: string): string;
         text_selection(next?: readonly [begin: number, end: number]): readonly [begin: number, end: number];
+        rich_pawn(next?: any): $giper_baza_rich;
         dict_title(): string;
         list_items(): $.$mol_drop[];
-        list_tools(): ($.$mol_string | $mol_button_minor | $.$mol_select)[];
+        list_tools(): ($mol_button_minor | $.$mol_select)[];
         list_pick(next?: $giper_baza_link): null;
         list_item_add(): void;
-        list_item_link(): void;
+        list_item_paste(): null | undefined;
         list_item_kill(sand: $giper_baza_unit_sand): void;
-        list_sand(sand: $giper_baza_unit_sand): $giper_baza_unit_sand;
-        list_item_value(sand: $giper_baza_unit_sand): string;
+        list_item_sand(index: number): $giper_baza_unit_sand;
+        list_item_text(index: number): string;
         list_item_adopt(transfer: DataTransfer): $giper_baza_vary_type;
-        list_item_receive(sand: $giper_baza_unit_sand, value: $giper_baza_vary_type): void;
+        list_item_receive(index: number, value: $giper_baza_vary_type): void;
         list_receive(value: string): void;
-        list_item_drag_end(sand: $giper_baza_unit_sand, event: DragEvent): void;
+        list_item_drag_end(index: number, event: DragEvent): void;
     }
 }
 
@@ -41068,52 +42890,42 @@ declare namespace $ {
 		,
 		ReturnType< $mol_view['sub'] >
 	>
-	type $mol_button_minor__sub_giper_baza_pawn_dump_18 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_button_minor['sub'] >
-	>
-	type $mol_button_minor__enabled_giper_baza_pawn_dump_19 = $mol_type_enforce<
-		ReturnType< $giper_baza_pawn_dump['can_change'] >
-		,
-		ReturnType< $mol_button_minor['enabled'] >
-	>
-	type $mol_button_minor__click_giper_baza_pawn_dump_20 = $mol_type_enforce<
-		ReturnType< $giper_baza_pawn_dump['unit_wipe'] >
-		,
-		ReturnType< $mol_button_minor['click'] >
-	>
-	type $giper_baza_unit_sand_dump__land_giper_baza_pawn_dump_21 = $mol_type_enforce<
+	type $giper_baza_unit_sand_dump__land_giper_baza_pawn_dump_18 = $mol_type_enforce<
 		ReturnType< $giper_baza_pawn_dump['land'] >
 		,
 		ReturnType< $giper_baza_unit_sand_dump['land'] >
 	>
-	type $giper_baza_unit_sand_dump__sand_giper_baza_pawn_dump_22 = $mol_type_enforce<
+	type $giper_baza_unit_sand_dump__sand_giper_baza_pawn_dump_19 = $mol_type_enforce<
 		ReturnType< $giper_baza_pawn_dump['unit_value'] >
 		,
 		ReturnType< $giper_baza_unit_sand_dump['sand'] >
 	>
-	type $giper_baza_pawn_dump__tag_giper_baza_pawn_dump_23 = $mol_type_enforce<
+	type $giper_baza_unit_sand_dump__enabled_giper_baza_pawn_dump_20 = $mol_type_enforce<
+		ReturnType< $giper_baza_pawn_dump['can_change'] >
+		,
+		ReturnType< $giper_baza_unit_sand_dump['enabled'] >
+	>
+	type $giper_baza_pawn_dump__tag_giper_baza_pawn_dump_21 = $mol_type_enforce<
 		ReturnType< $giper_baza_pawn_dump['unit_tag'] >
 		,
 		ReturnType< $giper_baza_pawn_dump['tag'] >
 	>
-	type $giper_baza_pawn_dump__addons_giper_baza_pawn_dump_24 = $mol_type_enforce<
+	type $giper_baza_pawn_dump__addons_giper_baza_pawn_dump_22 = $mol_type_enforce<
 		ReturnType< $giper_baza_pawn_dump['pawn_addons'] >
 		,
 		ReturnType< $giper_baza_pawn_dump['addons'] >
 	>
-	type $giper_baza_pawn_dump__pawn_giper_baza_pawn_dump_25 = $mol_type_enforce<
+	type $giper_baza_pawn_dump__pawn_giper_baza_pawn_dump_23 = $mol_type_enforce<
 		ReturnType< $giper_baza_pawn_dump['pawn_inner'] >
 		,
 		ReturnType< $giper_baza_pawn_dump['pawn'] >
 	>
-	type $mol_view__sub_giper_baza_pawn_dump_26 = $mol_type_enforce<
+	type $mol_view__sub_giper_baza_pawn_dump_24 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_view['sub'] >
 	>
-	type $mol_view__sub_giper_baza_pawn_dump_27 = $mol_type_enforce<
+	type $mol_view__sub_giper_baza_pawn_dump_25 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_view['sub'] >
@@ -41137,9 +42949,6 @@ declare namespace $ {
 		Unit_tag( id: any): $mol_select
 		unit_time( id: any): string
 		Unit_time( id: any): $mol_view
-		Unit_wipe_icon( id: any): $mol_icon_close
-		unit_wipe( id: any, next?: any ): any
-		Unit_wipe( id: any): $mol_button_minor
 		unit_value( id: any): any
 		Unit_value( id: any): $giper_baza_unit_sand_dump
 		pawn_addons( id: any): readonly(any)[]
@@ -41169,13 +42978,7 @@ declare namespace $.$$ {
         unit_tag(index: number, next?: keyof typeof $giper_baza_unit_sand_tag): "keys" | "term" | "solo" | "vals";
         unit_time(index: number): string;
         unit_value(index: number): $giper_baza_unit_sand;
-        unit_wipe(index: number, event?: Event): void;
         pawn_inner(index: number): $giper_baza_dict;
-        add_key(event: Event): void;
-        add_value(event: Event): void;
-        value_str(next?: string): string;
-        text(next?: string): string;
-        editors(): $.$mol_textarea[];
     }
 }
 
@@ -41966,251 +43769,6 @@ declare namespace $.$$ {
 
 declare namespace $ {
 
-	export class $mol_svg_group extends $mol_svg {
-		dom_name( ): string
-	}
-	
-}
-
-//# sourceMappingURL=group.view.tree.d.ts.map
-declare namespace $ {
-    class $mol_vector<Value, Length extends number> extends Array<Value> {
-        get length(): Length;
-        constructor(...values: Value[] & {
-            length: Length;
-        });
-        map<Res>(convert: (value: Value, index: number, array: this) => Res, self?: any): $mol_vector<Res, Length>;
-        merged<Patch>(patches: readonly Patch[] & {
-            length: Length;
-        }, combine: (value: Value, patch: Patch) => Value): this;
-        limited(this: $mol_vector<number, Length>, limits: readonly (readonly [number, number])[] & {
-            length: Length;
-        }): this;
-        added0(this: $mol_vector<number, Length>, diff: number): this;
-        added1(this: $mol_vector<number, Length>, diff: readonly number[] & {
-            length: Length;
-        }): this;
-        substracted1(this: $mol_vector<number, Length>, diff: readonly number[] & {
-            length: Length;
-        }): this;
-        multed0(this: $mol_vector<number, Length>, mult: number): this;
-        multed1(this: $mol_vector<number, Length>, mults: readonly number[] & {
-            length: Length;
-        }): this;
-        divided1(this: $mol_vector<number, Length>, mults: readonly number[] & {
-            length: Length;
-        }): this;
-        powered0(this: $mol_vector<number, Length>, mult: number): this;
-        expanded1(this: $mol_vector<$mol_vector_range<number>, Length>, point: readonly number[] & {
-            length: Length;
-        }): this;
-        expanded2(this: $mol_vector<$mol_vector_range<number>, Length>, point: readonly (readonly [number, number])[] & {
-            length: Length;
-        }): this;
-        center<Item extends $mol_vector<number, number>>(this: $mol_vector<Item, Length>): Item;
-        distance(this: $mol_vector<$mol_vector<number, number>, Length>): number;
-        transponed(this: $mol_vector<$mol_vector<number, number>, Length>): $mol_vector<$mol_vector<number, Length>, typeof this[0]['length']>;
-        get x(): Value;
-        set x(next: Value);
-        get y(): Value;
-        set y(next: Value);
-        get z(): Value;
-        set z(next: Value);
-    }
-    class $mol_vector_1d<Value> extends $mol_vector<Value, 1> {
-    }
-    class $mol_vector_2d<Value> extends $mol_vector<Value, 2> {
-    }
-    class $mol_vector_3d<Value> extends $mol_vector<Value, 3> {
-    }
-    class $mol_vector_range<Value> extends $mol_vector<Value, 2> {
-        0: Value;
-        1: Value;
-        constructor(min: Value, max?: Value);
-        get min(): Value;
-        set min(next: Value);
-        get max(): Value;
-        set max(next: Value);
-        get inversed(): $mol_vector_range<Value>;
-        expanded0(value: Value): $mol_vector_range<Value>;
-    }
-    let $mol_vector_range_full: $mol_vector_range<number>;
-    class $mol_vector_matrix<Width extends number, Height extends number> extends $mol_vector<readonly number[] & {
-        length: Width;
-    }, Height> {
-        added2(diff: readonly (readonly number[] & {
-            length: Width;
-        })[] & {
-            length: Height;
-        }): this;
-        multed2(diff: readonly (readonly number[] & {
-            length: Width;
-        })[] & {
-            length: Height;
-        }): this;
-    }
-}
-
-declare namespace $ {
-
-	export class $mol_svg_title extends $mol_svg {
-		dom_name( ): string
-		sub( ): readonly(any)[]
-	}
-	
-}
-
-//# sourceMappingURL=title.view.tree.d.ts.map
-declare namespace $ {
-
-	type $mol_vector_range__mol_plot_graph_1 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_2 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_3 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_4 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_5 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_6 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_7 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_graph_8 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_2d__mol_plot_graph_9 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_graph['viewport_x'] >, ReturnType< $mol_plot_graph['viewport_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_graph_10 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_graph_11 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_graph['dimensions_pane_x'] >, ReturnType< $mol_plot_graph['dimensions_pane_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_graph_12 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_graph['dimensions_x'] >, ReturnType< $mol_plot_graph['dimensions_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_graph_13 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_graph_14 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_graph['gap_x'] >, ReturnType< $mol_plot_graph['gap_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_svg_title__title_mol_plot_graph_15 = $mol_type_enforce<
-		ReturnType< $mol_plot_graph['hint'] >
-		,
-		ReturnType< $mol_svg_title['title'] >
-	>
-	export class $mol_plot_graph extends $mol_svg_group {
-		type( ): string
-		color( ): string
-		viewport_x( ): $mol_vector_range<number>
-		viewport_y( ): $mol_vector_range<number>
-		dimensions_pane_x( ): $mol_vector_range<number>
-		dimensions_pane_y( ): $mol_vector_range<number>
-		dimensions_x( ): $mol_vector_range<number>
-		dimensions_y( ): $mol_vector_range<number>
-		gap_x( ): $mol_vector_range<number>
-		gap_y( ): $mol_vector_range<number>
-		title( ): string
-		hint( ): ReturnType< $mol_plot_graph['title'] >
-		series_x( ): readonly(number)[]
-		series_y( ): readonly(number)[]
-		attr( ): ({ 
-			'mol_plot_graph_type': ReturnType< $mol_plot_graph['type'] >,
-		})  & ReturnType< $mol_svg_group['attr'] >
-		style( ): ({ 
-			'color': ReturnType< $mol_plot_graph['color'] >,
-		})  & ReturnType< $mol_svg_group['style'] >
-		viewport( ): $mol_vector_2d<$mol_vector_range<number>>
-		shift( ): readonly(number)[]
-		scale( ): readonly(number)[]
-		cursor_position( ): $mol_vector_2d<number>
-		dimensions_pane( ): $mol_vector_2d<$mol_vector_range<number>>
-		dimensions( ): $mol_vector_2d<$mol_vector_range<number>>
-		size_real( ): $mol_vector_2d<number>
-		gap( ): $mol_vector_2d<$mol_vector_range<number>>
-		repos_x( id: any): number
-		repos_y( id: any): number
-		indexes( ): readonly(number)[]
-		points( ): readonly(readonly(number)[])[]
-		front( ): readonly($mol_svg)[]
-		back( ): readonly($mol_svg)[]
-		Hint( ): $mol_svg_title
-		hue( next?: number ): number
-		Sample( ): any
-	}
-	
-	export class $mol_plot_graph_sample extends $mol_view {
-		type( ): string
-		color( ): string
-		attr( ): ({ 
-			'mol_plot_graph_type': ReturnType< $mol_plot_graph_sample['type'] >,
-		})  & ReturnType< $mol_view['attr'] >
-		style( ): ({ 
-			'color': ReturnType< $mol_plot_graph_sample['color'] >,
-		})  & ReturnType< $mol_view['style'] >
-	}
-	
-}
-
-//# sourceMappingURL=graph.view.tree.d.ts.map
-declare namespace $.$$ {
-    class $mol_plot_graph extends $.$mol_plot_graph {
-        viewport(): $mol_vector_2d<$mol_vector_range<number>>;
-        indexes(): readonly number[];
-        repos_x(val: number): number;
-        repos_y(val: number): number;
-        points(): readonly (readonly number[])[];
-        series_x(): readonly number[];
-        dimensions(): $mol_vector_2d<$mol_vector_range<number>>;
-        color(): string;
-        front(): readonly $.$mol_svg[];
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
 	type $mol_plot_graph_sample__color_mol_plot_line_1 = $mol_type_enforce<
 		ReturnType< $mol_plot_line['color'] >
 		,
@@ -42242,6 +43800,190 @@ declare namespace $.$$ {
         sub(): readonly any[];
         indexes(): number[];
         curve(): string;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	type $mol_gallery__style_mol_gallery_1 = $mol_type_enforce<
+		({ 
+			'flexGrow': ReturnType< $mol_gallery['side_size'] >,
+		}) 
+		,
+		ReturnType< $mol_gallery['style'] >
+	>
+	type $mol_gallery__items_mol_gallery_2 = $mol_type_enforce<
+		ReturnType< $mol_gallery['side_items'] >
+		,
+		ReturnType< $mol_gallery['items'] >
+	>
+	export class $mol_gallery extends $mol_view {
+		items( ): readonly($mol_view)[]
+		side_size( id: any): string
+		side_items( id: any): readonly($mol_view)[]
+		sub( ): ReturnType< $mol_gallery['items'] >
+		Side( id: any): $mol_gallery
+	}
+	
+}
+
+//# sourceMappingURL=gallery.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_gallery_demo
+     */
+    class $mol_gallery extends $.$mol_gallery {
+        sub(): readonly $mol_view[];
+        side_items(id: number): $mol_view[];
+        side_size(id: number): string;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	type $mol_gallery__items_mol_chart_legend_1 = $mol_type_enforce<
+		ReturnType< $mol_chart_legend['graph_legends'] >
+		,
+		ReturnType< $mol_gallery['items'] >
+	>
+	type $mol_view__sub_mol_chart_legend_2 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	type $mol_view__sub_mol_chart_legend_3 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	type $mol_view__sub_mol_chart_legend_4 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	export class $mol_chart_legend extends $mol_scroll {
+		graph_legends( ): readonly($mol_view)[]
+		Gallery( ): $mol_gallery
+		Graph_sample( id: any): any
+		Graph_sample_box( id: any): $mol_view
+		graph_title( id: any): string
+		Graph_title( id: any): $mol_view
+		graphs( ): readonly($mol_plot_graph)[]
+		graphs_front( ): readonly($mol_plot_graph)[]
+		sub( ): readonly(any)[]
+		Graph_legend( id: any): $mol_view
+	}
+	
+}
+
+//# sourceMappingURL=legend.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_chart_legend extends $.$mol_chart_legend {
+        graphs_front(): readonly $mol_plot_graph[];
+        graph_legends(): readonly $mol_view[];
+        graph_title(index: number): string;
+        Graph_sample(index: number): any;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	type $mol_chart_legend__graphs_mol_chart_1 = $mol_type_enforce<
+		ReturnType< $mol_chart['graphs_colored'] >
+		,
+		ReturnType< $mol_chart_legend['graphs'] >
+	>
+	type __mol_chart_2 = $mol_type_enforce<
+		Parameters< $mol_chart['zoom'] >[0]
+		,
+		Parameters< ReturnType< $mol_chart['Plot'] >['scale_x'] >[0]
+	>
+	type $mol_plot_pane__zoom_mol_chart_3 = $mol_type_enforce<
+		ReturnType< $mol_chart['zoom'] >
+		,
+		ReturnType< $mol_plot_pane['zoom'] >
+	>
+	type $mol_plot_pane__gap_left_mol_chart_4 = $mol_type_enforce<
+		ReturnType< $mol_chart['gap_left'] >
+		,
+		ReturnType< $mol_plot_pane['gap_left'] >
+	>
+	type $mol_plot_pane__gap_right_mol_chart_5 = $mol_type_enforce<
+		ReturnType< $mol_chart['gap_right'] >
+		,
+		ReturnType< $mol_plot_pane['gap_right'] >
+	>
+	type $mol_plot_pane__gap_bottom_mol_chart_6 = $mol_type_enforce<
+		ReturnType< $mol_chart['gap_bottom'] >
+		,
+		ReturnType< $mol_plot_pane['gap_bottom'] >
+	>
+	type $mol_plot_pane__gap_top_mol_chart_7 = $mol_type_enforce<
+		ReturnType< $mol_chart['gap_top'] >
+		,
+		ReturnType< $mol_plot_pane['gap_top'] >
+	>
+	type $mol_plot_pane__graphs_mol_chart_8 = $mol_type_enforce<
+		ReturnType< $mol_chart['graphs'] >
+		,
+		ReturnType< $mol_plot_pane['graphs'] >
+	>
+	type $mol_plot_pane__hue_base_mol_chart_9 = $mol_type_enforce<
+		ReturnType< $mol_chart['hue_base'] >
+		,
+		ReturnType< $mol_plot_pane['hue_base'] >
+	>
+	type $mol_plot_pane__hue_shift_mol_chart_10 = $mol_type_enforce<
+		ReturnType< $mol_chart['hue_shift'] >
+		,
+		ReturnType< $mol_plot_pane['hue_shift'] >
+	>
+	export class $mol_chart extends $mol_view {
+		Legend( ): $mol_chart_legend
+		zoom( next?: ReturnType< ReturnType< $mol_chart['Plot'] >['scale_x'] > ): ReturnType< ReturnType< $mol_chart['Plot'] >['scale_x'] >
+		graphs_colored( ): ReturnType< ReturnType< $mol_chart['Plot'] >['graphs_colored'] >
+		hue_base( ): number
+		hue_shift( ): number
+		Plot( ): $mol_plot_pane
+		gap_hor( ): number
+		gap_vert( ): number
+		gap_left( ): ReturnType< $mol_chart['gap_hor'] >
+		gap_right( ): ReturnType< $mol_chart['gap_hor'] >
+		gap_bottom( ): ReturnType< $mol_chart['gap_vert'] >
+		gap_top( ): ReturnType< $mol_chart['gap_vert'] >
+		graphs( ): readonly($mol_plot_graph)[]
+		sub( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=chart.view.tree.d.ts.map
+declare namespace $ {
+
+	export class $mol_plot_fill extends $mol_plot_line {
+		threshold( ): number
+	}
+	
+}
+
+//# sourceMappingURL=fill.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $mol_plot_fill extends $.$mol_plot_fill {
+        curve(): string;
+        front(): never[];
+        back(): this[];
     }
 }
 
@@ -42635,496 +44377,53 @@ declare namespace $ {
 
 declare namespace $ {
 
-	type $mol_gallery__style_mol_gallery_1 = $mol_type_enforce<
-		({ 
-			'flexGrow': ReturnType< $mol_gallery['side_size'] >,
-		}) 
+	type $mol_plot_fill__Sample_giper_baza_app_stat_chart_1 = $mol_type_enforce<
+		any
 		,
-		ReturnType< $mol_gallery['style'] >
+		ReturnType< $mol_plot_fill['Sample'] >
 	>
-	type $mol_gallery__items_mol_gallery_2 = $mol_type_enforce<
-		ReturnType< $mol_gallery['side_items'] >
+	type $mol_plot_fill__series_x_giper_baza_app_stat_chart_2 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_chart['zones_x'] >
 		,
-		ReturnType< $mol_gallery['items'] >
+		ReturnType< $mol_plot_fill['series_x'] >
 	>
-	export class $mol_gallery extends $mol_view {
-		items( ): readonly($mol_view)[]
-		side_size( id: any): string
-		side_items( id: any): readonly($mol_view)[]
-		sub( ): ReturnType< $mol_gallery['items'] >
-		Side( id: any): $mol_gallery
-	}
-	
-}
-
-//# sourceMappingURL=gallery.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_gallery_demo
-     */
-    class $mol_gallery extends $.$mol_gallery {
-        sub(): readonly $mol_view[];
-        side_items(id: number): $mol_view[];
-        side_size(id: number): string;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	type $mol_gallery__items_mol_chart_legend_1 = $mol_type_enforce<
-		ReturnType< $mol_chart_legend['graph_legends'] >
+	type $mol_plot_fill__series_y_giper_baza_app_stat_chart_3 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_chart['zones_y'] >
 		,
-		ReturnType< $mol_gallery['items'] >
+		ReturnType< $mol_plot_fill['series_y'] >
 	>
-	type $mol_view__sub_mol_chart_legend_2 = $mol_type_enforce<
-		readonly(any)[]
+	type $mol_plot_mark_cross__labels_giper_baza_app_stat_chart_4 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_chart['times'] >
 		,
-		ReturnType< $mol_view['sub'] >
+		ReturnType< $mol_plot_mark_cross['labels'] >
 	>
-	type $mol_view__sub_mol_chart_legend_3 = $mol_type_enforce<
-		readonly(any)[]
+	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_chart_5 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 		,
-		ReturnType< $mol_view['sub'] >
+		ReturnType< $mol_plot_mark_cross['graphs'] >
 	>
-	type $mol_view__sub_mol_chart_legend_4 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_view['sub'] >
-	>
-	export class $mol_chart_legend extends $mol_scroll {
-		graph_legends( ): readonly($mol_view)[]
-		Gallery( ): $mol_gallery
-		Graph_sample( id: any): any
-		Graph_sample_box( id: any): $mol_view
-		graph_title( id: any): string
-		Graph_title( id: any): $mol_view
-		graphs( ): readonly($mol_plot_graph)[]
-		graphs_front( ): readonly($mol_plot_graph)[]
-		sub( ): readonly(any)[]
-		Graph_legend( id: any): $mol_view
-	}
-	
-}
-
-//# sourceMappingURL=legend.view.tree.d.ts.map
-declare namespace $.$$ {
-    class $mol_chart_legend extends $.$mol_chart_legend {
-        graphs_front(): readonly $mol_plot_graph[];
-        graph_legends(): readonly $mol_view[];
-        graph_title(index: number): string;
-        Graph_sample(index: number): any;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	type $mol_vector_2d__mol_touch_1 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_touch_2 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_touch_3 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	export class $mol_touch extends $mol_plugin {
-		event_start( next?: any ): any
-		event_move( next?: any ): any
-		event_end( next?: any ): any
-		event_leave( next?: any ): any
-		event_wheel( next?: any ): any
-		start_zoom( next?: number ): number
-		start_distance( next?: number ): number
-		zoom( next?: number ): number
-		allow_draw( ): boolean
-		allow_pan( ): boolean
-		allow_zoom( ): boolean
-		action_type( next?: string ): string
-		action_point( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
-		start_pan( next?: readonly(any)[] ): readonly(any)[]
-		pan( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
-		pointer_center( ): $mol_vector_2d<number>
-		start_pos( next?: any ): any
-		swipe_precision( ): number
-		swipe_right( next?: any ): any
-		swipe_bottom( next?: any ): any
-		swipe_left( next?: any ): any
-		swipe_top( next?: any ): any
-		swipe_from_right( next?: any ): any
-		swipe_from_bottom( next?: any ): any
-		swipe_from_left( next?: any ): any
-		swipe_from_top( next?: any ): any
-		swipe_to_right( next?: any ): any
-		swipe_to_bottom( next?: any ): any
-		swipe_to_left( next?: any ): any
-		swipe_to_top( next?: any ): any
-		draw_start( next?: any ): any
-		draw( next?: any ): any
-		draw_end( next?: any ): any
-		style( ): ({ 
-			'touch-action': string,
-			'overscroll-behavior': string,
-		})  & ReturnType< $mol_plugin['style'] >
-		event( ): ({ 
-			pointerdown( next?: ReturnType< $mol_touch['event_start'] > ): ReturnType< $mol_touch['event_start'] >,
-			pointermove( next?: ReturnType< $mol_touch['event_move'] > ): ReturnType< $mol_touch['event_move'] >,
-			pointerup( next?: ReturnType< $mol_touch['event_end'] > ): ReturnType< $mol_touch['event_end'] >,
-			pointerleave( next?: ReturnType< $mol_touch['event_leave'] > ): ReturnType< $mol_touch['event_leave'] >,
-			wheel( next?: ReturnType< $mol_touch['event_wheel'] > ): ReturnType< $mol_touch['event_wheel'] >,
-		})  & ReturnType< $mol_plugin['event'] >
-	}
-	
-}
-
-//# sourceMappingURL=touch.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * Plugin for touch gestures.
-     * @see [mol_plugin](../plugin/readme.md)
-     */
-    class $mol_touch extends $.$mol_touch {
-        auto(): void;
-        pointer_events(next?: readonly PointerEvent[]): readonly PointerEvent[];
-        pointer_coords(): $mol_vector<$mol_vector_2d<number>, number>;
-        pointer_center(): $mol_vector_2d<number>;
-        event_coords(event: PointerEvent | WheelEvent): $mol_vector_2d<number>;
-        action_point(): $mol_vector_2d<number>;
-        event_eat(event: PointerEvent | WheelEvent): string;
-        event_start(event: PointerEvent): void;
-        event_move(event: PointerEvent): void;
-        event_end(event: PointerEvent): void;
-        event_leave(event: PointerEvent): void;
-        swipe_left(event: PointerEvent): void;
-        swipe_right(event: PointerEvent): void;
-        swipe_top(event: PointerEvent): void;
-        swipe_bottom(event: PointerEvent): void;
-        event_wheel(event: WheelEvent): void;
-    }
-}
-
-declare namespace $ {
-
-	type $mol_vector_range__mol_plot_pane_1 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['gap_left'] >, ReturnType< $mol_plot_pane['gap_right'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_2 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['gap_bottom'] >, ReturnType< $mol_plot_pane['gap_top'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_3 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_4 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_5 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_6 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_7 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_8 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_9 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_vector_range__mol_plot_pane_10 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_range<number> >
-	>
-	type $mol_touch__zoom_mol_plot_pane_11 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['zoom'] >
-		,
-		ReturnType< $mol_touch['zoom'] >
-	>
-	type $mol_touch__pan_mol_plot_pane_12 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['shift'] >
-		,
-		ReturnType< $mol_touch['pan'] >
-	>
-	type $mol_touch__allow_draw_mol_plot_pane_13 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['allow_draw'] >
-		,
-		ReturnType< $mol_touch['allow_draw'] >
-	>
-	type $mol_touch__allow_pan_mol_plot_pane_14 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['allow_pan'] >
-		,
-		ReturnType< $mol_touch['allow_pan'] >
-	>
-	type $mol_touch__allow_zoom_mol_plot_pane_15 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['allow_zoom'] >
-		,
-		ReturnType< $mol_touch['allow_zoom'] >
-	>
-	type $mol_touch__draw_start_mol_plot_pane_16 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['draw_start'] >
-		,
-		ReturnType< $mol_touch['draw_start'] >
-	>
-	type $mol_touch__draw_mol_plot_pane_17 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['draw'] >
-		,
-		ReturnType< $mol_touch['draw'] >
-	>
-	type $mol_touch__draw_end_mol_plot_pane_18 = $mol_type_enforce<
-		ReturnType< $mol_plot_pane['draw_end'] >
-		,
-		ReturnType< $mol_touch['draw_end'] >
-	>
-	type $mol_vector_2d__mol_plot_pane_19 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['gap_x'] >, ReturnType< $mol_plot_pane['gap_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_pane_20 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['shift_limit_x'] >, ReturnType< $mol_plot_pane['shift_limit_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_pane_21 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_pane_22 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_pane_23 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['scale_limit_x'] >, ReturnType< $mol_plot_pane['scale_limit_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_pane_24 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_pane_25 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_pane_26 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_pane_27 = $mol_type_enforce<
-		[ number, number ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<number> >
-	>
-	type $mol_vector_2d__mol_plot_pane_28 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['dimensions_x'] >, ReturnType< $mol_plot_pane['dimensions_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	type $mol_vector_2d__mol_plot_pane_29 = $mol_type_enforce<
-		[ ReturnType< $mol_plot_pane['dimensions_viewport_x'] >, ReturnType< $mol_plot_pane['dimensions_viewport_y'] > ]
-		,
-		ConstructorParameters< typeof $mol_vector_2d<$mol_vector_range<number>> >
-	>
-	export class $mol_plot_pane extends $mol_svg_root {
-		gap_x( ): $mol_vector_range<number>
-		gap_y( ): $mol_vector_range<number>
-		shift_limit_x( ): $mol_vector_range<number>
-		shift_limit_y( ): $mol_vector_range<number>
-		scale_limit_x( ): $mol_vector_range<number>
-		scale_limit_y( ): $mol_vector_range<number>
-		dimensions_x( ): $mol_vector_range<number>
-		dimensions_y( ): $mol_vector_range<number>
-		dimensions_viewport_x( ): $mol_vector_range<number>
-		dimensions_viewport_y( ): $mol_vector_range<number>
-		graphs_sorted( ): readonly($mol_svg)[]
-		graphs( ): readonly($mol_plot_graph)[]
-		graphs_positioned( ): ReturnType< $mol_plot_pane['graphs'] >
-		graphs_visible( ): ReturnType< $mol_plot_pane['graphs_positioned'] >
-		zoom( next?: number ): number
-		cursor_position( ): ReturnType< ReturnType< $mol_plot_pane['Touch'] >['pointer_center'] >
-		allow_draw( ): boolean
-		allow_pan( ): boolean
-		allow_zoom( ): boolean
-		action_type( ): ReturnType< ReturnType< $mol_plot_pane['Touch'] >['action_type'] >
-		action_point( ): ReturnType< ReturnType< $mol_plot_pane['Touch'] >['action_point'] >
-		draw_start( next?: any ): any
-		draw( next?: any ): any
-		draw_end( next?: any ): any
-		Touch( ): $mol_touch
-		aspect( ): string
-		hue_base( next?: number ): number
-		hue_shift( next?: number ): number
-		gap_hor( ): number
-		gap_vert( ): number
-		gap_left( ): ReturnType< $mol_plot_pane['gap_hor'] >
-		gap_right( ): ReturnType< $mol_plot_pane['gap_hor'] >
-		gap_top( ): ReturnType< $mol_plot_pane['gap_vert'] >
-		gap_bottom( ): ReturnType< $mol_plot_pane['gap_vert'] >
-		gap( ): $mol_vector_2d<$mol_vector_range<number>>
-		shift_limit( ): $mol_vector_2d<$mol_vector_range<number>>
-		shift_default( ): $mol_vector_2d<number>
-		shift( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
-		scale_limit( ): $mol_vector_2d<$mol_vector_range<number>>
-		scale_default( ): $mol_vector_2d<number>
-		scale( next?: $mol_vector_2d<number> ): $mol_vector_2d<number>
-		scale_x( next?: number ): number
-		scale_y( next?: number ): number
-		size( ): $mol_vector_2d<number>
-		size_real( ): $mol_vector_2d<number>
-		dimensions( ): $mol_vector_2d<$mol_vector_range<number>>
-		dimensions_viewport( ): $mol_vector_2d<$mol_vector_range<number>>
-		sub( ): ReturnType< $mol_plot_pane['graphs_sorted'] >
-		graphs_colored( ): ReturnType< $mol_plot_pane['graphs_visible'] >
-		plugins( ): readonly(any)[]
-	}
-	
-}
-
-//# sourceMappingURL=pane.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * Fastest plot lib for vector graphics.
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_plot_demo
-     */
-    class $mol_plot_pane extends $.$mol_plot_pane {
-        dimensions(): $mol_vector_2d<$mol_vector_range<number>>;
-        size(): $mol_vector_2d<number>;
-        graph_hue(index: number): number;
-        graphs_colored(): $.$mol_plot_graph[];
-        size_real(): $mol_vector_2d<number>;
-        view_box(): string;
-        scale_limit(): $mol_vector_2d<$mol_vector_range<number>>;
-        scale_default(): $mol_vector_2d<number>;
-        scale(next?: $mol_vector_2d<number>): $mol_vector_2d<number>;
-        scale_x(next?: number): number;
-        scale_y(next?: number): number;
-        shift_limit(): $mol_vector_2d<$mol_vector_range<number>>;
-        shift_default(): $mol_vector_2d<number>;
-        graph_touched: boolean;
-        shift(next?: $mol_vector_2d<number>): $mol_vector_2d<number>;
-        reset(event?: Event): void;
-        graphs_visible(): $.$mol_plot_graph[];
-        graphs_positioned(): readonly $.$mol_plot_graph[];
-        dimensions_viewport(): $mol_vector<$mol_vector_range<number>, 2>;
-        viewport(): $mol_vector_2d<$mol_vector_range<number>>;
-        graphs_sorted(): $.$mol_svg[];
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	type $mol_chart_legend__graphs_mol_chart_1 = $mol_type_enforce<
-		ReturnType< $mol_chart['graphs_colored'] >
-		,
-		ReturnType< $mol_chart_legend['graphs'] >
-	>
-	type __mol_chart_2 = $mol_type_enforce<
-		Parameters< $mol_chart['zoom'] >[0]
-		,
-		Parameters< ReturnType< $mol_chart['Plot'] >['scale_x'] >[0]
-	>
-	type $mol_plot_pane__zoom_mol_chart_3 = $mol_type_enforce<
-		ReturnType< $mol_chart['zoom'] >
-		,
-		ReturnType< $mol_plot_pane['zoom'] >
-	>
-	type $mol_plot_pane__gap_left_mol_chart_4 = $mol_type_enforce<
-		ReturnType< $mol_chart['gap_left'] >
-		,
-		ReturnType< $mol_plot_pane['gap_left'] >
-	>
-	type $mol_plot_pane__gap_right_mol_chart_5 = $mol_type_enforce<
-		ReturnType< $mol_chart['gap_right'] >
-		,
-		ReturnType< $mol_plot_pane['gap_right'] >
-	>
-	type $mol_plot_pane__gap_bottom_mol_chart_6 = $mol_type_enforce<
-		ReturnType< $mol_chart['gap_bottom'] >
-		,
-		ReturnType< $mol_plot_pane['gap_bottom'] >
-	>
-	type $mol_plot_pane__gap_top_mol_chart_7 = $mol_type_enforce<
-		ReturnType< $mol_chart['gap_top'] >
-		,
-		ReturnType< $mol_plot_pane['gap_top'] >
-	>
-	type $mol_plot_pane__graphs_mol_chart_8 = $mol_type_enforce<
-		ReturnType< $mol_chart['graphs'] >
-		,
-		ReturnType< $mol_plot_pane['graphs'] >
-	>
-	type $mol_plot_pane__hue_base_mol_chart_9 = $mol_type_enforce<
-		ReturnType< $mol_chart['hue_base'] >
-		,
-		ReturnType< $mol_plot_pane['hue_base'] >
-	>
-	type $mol_plot_pane__hue_shift_mol_chart_10 = $mol_type_enforce<
-		ReturnType< $mol_chart['hue_shift'] >
-		,
-		ReturnType< $mol_plot_pane['hue_shift'] >
-	>
-	export class $mol_chart extends $mol_view {
-		Legend( ): $mol_chart_legend
-		zoom( next?: ReturnType< ReturnType< $mol_chart['Plot'] >['scale_x'] > ): ReturnType< ReturnType< $mol_chart['Plot'] >['scale_x'] >
-		graphs_colored( ): ReturnType< ReturnType< $mol_chart['Plot'] >['graphs_colored'] >
-		hue_base( ): number
-		hue_shift( ): number
-		Plot( ): $mol_plot_pane
-		gap_hor( ): number
-		gap_vert( ): number
-		gap_left( ): ReturnType< $mol_chart['gap_hor'] >
-		gap_right( ): ReturnType< $mol_chart['gap_hor'] >
-		gap_bottom( ): ReturnType< $mol_chart['gap_vert'] >
-		gap_top( ): ReturnType< $mol_chart['gap_vert'] >
-		graphs( ): readonly($mol_plot_graph)[]
-		sub( ): readonly(any)[]
+	export class $giper_baza_app_stat_chart extends $mol_chart {
+		metrics( ): readonly($mol_plot_graph)[]
+		zones_x( ): readonly(any)[]
+		zones_y( ): readonly(any)[]
+		Zones( ): $mol_plot_fill
+		Ruler_vert( ): $mol_plot_ruler_vert
+		times( ): readonly(any)[]
+		Marks( ): $mol_plot_mark_cross
+		graphs( ): readonly(any)[]
 	}
 	
 }
 
 //# sourceMappingURL=chart.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $giper_baza_app_stat_chart extends $.$giper_baza_app_stat_chart {
+        times(): string[];
+        zones_x(): number[];
+        zones_y(): number[];
+    }
+}
+
 declare namespace $ {
 
 	type $giper_baza_link_chip__link_giper_baza_app_stat_page_1 = $mol_type_enforce<
@@ -43169,20 +44468,20 @@ declare namespace $ {
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_9 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_10 = $mol_type_enforce<
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_9 = $mol_type_enforce<
 		readonly(any)[]
 		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_11 = $mol_type_enforce<
-		readonly(any)[]
+	type $mol_plot_line__title_giper_baza_app_stat_page_10 = $mol_type_enforce<
+		string
 		,
-		ReturnType< $mol_chart['graphs'] >
+		ReturnType< $mol_plot_line['title'] >
+	>
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_11 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_page['mem_free'] >
+		,
+		ReturnType< $mol_plot_line['series_y'] >
 	>
 	type $mol_plot_line__title_giper_baza_app_stat_page_12 = $mol_type_enforce<
 		string
@@ -43190,114 +44489,114 @@ declare namespace $ {
 		ReturnType< $mol_plot_line['title'] >
 	>
 	type $mol_plot_line__series_y_giper_baza_app_stat_page_13 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['mem_free'] >
-		,
-		ReturnType< $mol_plot_line['series_y'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_14 = $mol_type_enforce<
-		string
-		,
-		ReturnType< $mol_plot_line['title'] >
-	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_15 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['mem_used'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_16 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_17 = $mol_type_enforce<
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_14 = $mol_type_enforce<
 		readonly(any)[]
 		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_18 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_chart['graphs'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_19 = $mol_type_enforce<
+	type $mol_plot_line__title_giper_baza_app_stat_page_15 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_plot_line['title'] >
 	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_20 = $mol_type_enforce<
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_16 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['fs_free'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_21 = $mol_type_enforce<
+	type $mol_plot_line__title_giper_baza_app_stat_page_17 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_plot_line['title'] >
 	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_22 = $mol_type_enforce<
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_18 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['fs_used'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_23 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_24 = $mol_type_enforce<
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_19 = $mol_type_enforce<
 		readonly(any)[]
 		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_25 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_chart['graphs'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_26 = $mol_type_enforce<
+	type $mol_plot_line__title_giper_baza_app_stat_page_20 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_plot_line['title'] >
 	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_27 = $mol_type_enforce<
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_21 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['fs_reads'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_28 = $mol_type_enforce<
+	type $mol_plot_line__title_giper_baza_app_stat_page_22 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_plot_line['title'] >
 	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_29 = $mol_type_enforce<
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_23 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['fs_writes'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_30 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_31 = $mol_type_enforce<
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_24 = $mol_type_enforce<
 		readonly(any)[]
 		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_32 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_chart['graphs'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_33 = $mol_type_enforce<
+	type $mol_plot_line__title_giper_baza_app_stat_page_25 = $mol_type_enforce<
 		string
 		,
 		ReturnType< $mol_plot_line['title'] >
 	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_34 = $mol_type_enforce<
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_26 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['port_slaves'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
+	>
+	type $mol_plot_line__title_giper_baza_app_stat_page_27 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_plot_line['title'] >
+	>
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_28 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_page['port_masters'] >
+		,
+		ReturnType< $mol_plot_line['series_y'] >
+	>
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_29 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
+	>
+	type $mol_plot_line__title_giper_baza_app_stat_page_30 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_plot_line['title'] >
+	>
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_31 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_page['land_alive'] >
+		,
+		ReturnType< $mol_plot_line['series_y'] >
+	>
+	type $mol_plot_line__title_giper_baza_app_stat_page_32 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_plot_line['title'] >
+	>
+	type $mol_plot_line__series_y_giper_baza_app_stat_page_33 = $mol_type_enforce<
+		ReturnType< $giper_baza_app_stat_page['land_ghost'] >
+		,
+		ReturnType< $mol_plot_line['series_y'] >
+	>
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_34 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 	>
 	type $mol_plot_line__title_giper_baza_app_stat_page_35 = $mol_type_enforce<
 		string
@@ -43305,86 +44604,16 @@ declare namespace $ {
 		ReturnType< $mol_plot_line['title'] >
 	>
 	type $mol_plot_line__series_y_giper_baza_app_stat_page_36 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['port_masters'] >
-		,
-		ReturnType< $mol_plot_line['series_y'] >
-	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_37 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_38 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
-	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_39 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_chart['graphs'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_40 = $mol_type_enforce<
-		string
-		,
-		ReturnType< $mol_plot_line['title'] >
-	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_41 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['land_alive'] >
-		,
-		ReturnType< $mol_plot_line['series_y'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_42 = $mol_type_enforce<
-		string
-		,
-		ReturnType< $mol_plot_line['title'] >
-	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_43 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['land_ghost'] >
-		,
-		ReturnType< $mol_plot_line['series_y'] >
-	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_44 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_45 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
-	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_46 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_chart['graphs'] >
-	>
-	type $mol_plot_line__title_giper_baza_app_stat_page_47 = $mol_type_enforce<
-		string
-		,
-		ReturnType< $mol_plot_line['title'] >
-	>
-	type $mol_plot_line__series_y_giper_baza_app_stat_page_48 = $mol_type_enforce<
 		ReturnType< $giper_baza_app_stat_page['errors'] >
 		,
 		ReturnType< $mol_plot_line['series_y'] >
 	>
-	type $mol_plot_mark_cross__labels_giper_baza_app_stat_page_49 = $mol_type_enforce<
-		ReturnType< $giper_baza_app_stat_page['times'] >
-		,
-		ReturnType< $mol_plot_mark_cross['labels'] >
-	>
-	type $mol_plot_mark_cross__graphs_giper_baza_app_stat_page_50 = $mol_type_enforce<
+	type $giper_baza_app_stat_chart__metrics_giper_baza_app_stat_page_37 = $mol_type_enforce<
 		readonly(any)[]
 		,
-		ReturnType< $mol_plot_mark_cross['graphs'] >
+		ReturnType< $giper_baza_app_stat_chart['metrics'] >
 	>
-	type $mol_chart__graphs_giper_baza_app_stat_page_51 = $mol_type_enforce<
-		readonly(any)[]
-		,
-		ReturnType< $mol_chart['graphs'] >
-	>
-	type $mol_gallery__items_giper_baza_app_stat_page_52 = $mol_type_enforce<
+	type $mol_gallery__items_giper_baza_app_stat_page_38 = $mol_type_enforce<
 		readonly(any)[]
 		,
 		ReturnType< $mol_gallery['items'] >
@@ -43400,50 +44629,35 @@ declare namespace $ {
 		Cpu_user( ): $mol_plot_line
 		cpu_system( ): readonly(any)[]
 		Cpu_system( ): $mol_plot_line
-		Cpu_ruler_sec( ): $mol_plot_ruler_vert
-		times( ): readonly(any)[]
-		Cpu_mark( ): $mol_plot_mark_cross
-		Cpu( ): $mol_chart
+		Cpu( ): $giper_baza_app_stat_chart
 		mem_free( ): readonly(any)[]
 		Mem_free( ): $mol_plot_line
 		mem_used( ): readonly(any)[]
 		Mem_used( ): $mol_plot_line
-		Mem_ruler( ): $mol_plot_ruler_vert
-		Mem_mark( ): $mol_plot_mark_cross
-		Mem( ): $mol_chart
+		Mem( ): $giper_baza_app_stat_chart
 		fs_free( ): readonly(any)[]
 		Fs_free( ): $mol_plot_line
 		fs_used( ): readonly(any)[]
 		Fs_used( ): $mol_plot_line
-		Fs_usage_ruler( ): $mol_plot_ruler_vert
-		Fs_usage_mark( ): $mol_plot_mark_cross
-		Fs_usage( ): $mol_chart
+		Fs_usage( ): $giper_baza_app_stat_chart
 		fs_reads( ): readonly(any)[]
 		Fs_reads( ): $mol_plot_line
 		fs_writes( ): readonly(any)[]
 		Fs_writes( ): $mol_plot_line
-		Fs_acting_ruler( ): $mol_plot_ruler_vert
-		Fs_acting_mark( ): $mol_plot_mark_cross
-		Fs_acting( ): $mol_chart
+		Fs_acting( ): $giper_baza_app_stat_chart
 		port_slaves( ): readonly(any)[]
 		Port_slaves( ): $mol_plot_line
 		port_masters( ): readonly(any)[]
 		Port_masters( ): $mol_plot_line
-		Port_ruler_pct( ): $mol_plot_ruler_vert
-		Port_mark( ): $mol_plot_mark_cross
-		Ports( ): $mol_chart
+		Ports( ): $giper_baza_app_stat_chart
 		land_alive( ): readonly(any)[]
 		Land_alive( ): $mol_plot_line
 		land_ghost( ): readonly(any)[]
 		Land_ghost( ): $mol_plot_line
-		Land_count_ruler( ): $mol_plot_ruler_vert
-		Land_count_mark( ): $mol_plot_mark_cross
-		Land_count( ): $mol_chart
+		Land_count( ): $giper_baza_app_stat_chart
 		errors( ): readonly(any)[]
 		Errors( ): $mol_plot_line
-		Error_count_ruler( ): $mol_plot_ruler_vert
-		Error_count_mark( ): $mol_plot_mark_cross
-		Error_count( ): $mol_chart
+		Error_count( ): $giper_baza_app_stat_chart
 		Charts( ): $mol_gallery
 		home( ): $giper_baza_app_home
 		head( ): readonly(any)[]
@@ -43470,7 +44684,6 @@ declare namespace $.$$ {
         port_slaves(): number[];
         port_masters(): number[];
         errors(): number[];
-        times(): string[];
     }
 }
 
@@ -43953,11 +45166,11 @@ declare namespace $.$$ {
 
 declare namespace $ {
     /**
-     * Рабочий baza-master экосистемы bog. Bundled seed (giper/baza peer.baza)
-     * может указывать на недоступный хост — добавляем актуальный явно,
-     * чтобы виджет фидбека работал в любом приложении без своего boot-кода.
+     * Ленд-реестр: feedback_id → ссылка на ленд с отзывами этого проекта.
+     * Пресет `[null, post('just')]` — ленд нового проекта заводит первый
+     * отправитель отзыва, заход владельца не нужен.
      */
-    export const $bog_feedback2_master = "https://baza.87.120.36.150.ip.giper.dev/";
+    export const $bog_feedback2_registry = "c0FEYfG8_tUFJEKfo";
     const $bog_feedback2_entry_base: Omit<typeof $giper_baza_dict, "prototype"> & {
         new (...args: any[]): $mol_type_override<$giper_baza_dict, {
             readonly Text: (auto?: any) => $giper_baza_atom_text | null;
@@ -44106,11 +45319,6 @@ declare namespace $ {
 		,
 		ReturnType< $mol_status['message'] >
 	>
-	type $mol_paragraph__title_bog_feedback2_form_25 = $mol_type_enforce<
-		ReturnType< $bog_feedback2_form['waiting_title'] >
-		,
-		ReturnType< $mol_paragraph['title'] >
-	>
 	export class $bog_feedback2_form extends $mol_page {
 		Close( ): any
 		prompt( ): string
@@ -44144,15 +45352,26 @@ declare namespace $ {
 		Entry_row( id: any): $mol_section
 		entry_rows( ): readonly(any)[]
 		Entries( ): $mol_section
-		waiting_title( ): string
 		Head( ): any
 		feedback_id( ): string
 		registry_link( ): string
 		title( ): string
+		prompt_title( ): string
+		prompt_like( ): string
+		prompt_better( ): string
+		prompt_future( ): string
+		submit_send( ): string
+		submit_update( ): string
+		anonymous( ): string
+		reply_send( ): string
+		reply_update( ): string
+		reply_open( ): string
+		reply_cancel( ): string
+		reply_edit( ): string
+		not_ready( ): string
 		tools( ): readonly(any)[]
 		body( ): readonly(any)[]
 		Not_configured( ): $mol_status
-		Waiting( ): $mol_paragraph
 	}
 	
 }
@@ -44160,6 +45379,8 @@ declare namespace $ {
 //# sourceMappingURL=form.view.tree.d.ts.map
 declare namespace $.$$ {
     class $bog_feedback2_form extends $.$bog_feedback2_form {
+        /** Реестр по умолчанию — общий; приложение может подменить биндингом. */
+        registry_link(): string;
         registry_land(): $giper_baza_land;
         registry_dict(): {
             Value: typeof $giper_baza_atom_text;
@@ -44203,10 +45424,24 @@ declare namespace $.$$ {
         my_lord(): string;
         /** Ссылка на feedback land: из URL (приоритет) или из реестра */
         feedback_land_link(): string | null;
+        /**
+         * Ленд проекта. null — ленда ещё нет.
+         *
+         * Заводить его ЗДЕСЬ нельзя: land() зовётся из рендера, land_grab внутри
+         * считает PoW и бросает Promise, рендер ретраится — и так по кругу, на
+         * экране вечный спиннер. Плюс на холодном кеше «указателя нет» и «реестр
+         * ещё не доехал» неотличимы, так что каждый второй посетитель форкал бы
+         * ленд и перетирал указатель. Заводим только из submit(), по явному клику.
+         */
         land(): $giper_baza_land | null;
         /** Хватает ли прав записать ссылку нового ленда в реестр. */
         can_registry_post(): boolean;
-        land_ensure(): $giper_baza_land;
+        /**
+         * Реестр с пресетом [null, post]: ленд для нового feedback_id заводит
+         * первый отправитель отзыва, заход владельца не нужен. На старом
+         * read-only реестре прав не хватит — тогда отзыв просто не уедет.
+         */
+        land_ensure(): $giper_baza_land | null;
         entries_dict(): {
             Value: typeof $bog_feedback2_entry;
             key(key: $giper_baza_vary_type, auto?: any): $bog_feedback2_entry;
@@ -44253,9 +45488,9 @@ declare namespace $.$$ {
         draft_text(next?: string): string;
         draft_contact(next?: string): string;
         has_entry(): boolean;
-        submit_title(): "Update feedback" | "Send feedback";
+        submit_title(): string;
         submit(): void;
-        body(): $.$mol_status[] | $.$mol_paragraph[] | ($.$mol_string | $.$mol_text | $mol_button_major | $.$mol_textarea | $.$mol_section)[];
+        body(): $.$mol_status[] | ($.$mol_string | $.$mol_text | $mol_button_major | $.$mol_textarea | $.$mol_section)[];
         all_lords(): string[];
         entry_rows(): $.$mol_section[];
         private entry_by_index;
@@ -44266,15 +45501,12 @@ declare namespace $.$$ {
         entry_row_reply_text(index: number): string;
         entry_row_reply_form_open(index: number, next?: boolean): boolean;
         entry_row_reply_draft(index: number, next?: string): string;
-        entry_row_reply_submit_title(index: number): "Update reply" | "Send reply";
-        entry_row_reply_toggle_title(index: number): "Edit reply" | "Cancel" | "Reply";
+        entry_row_reply_submit_title(index: number): string;
+        entry_row_reply_toggle_title(index: number): string;
         entry_row_reply_toggle(index: number): void;
         entry_row_reply_submit(index: number): void;
         entry_row_reply_sub(index: number): readonly any[];
     }
-}
-
-declare namespace $ {
 }
 
 declare namespace $ {
@@ -44439,6 +45671,285 @@ declare namespace $ {
 
 //# sourceMappingURL=demo.view.tree.d.ts.map
 declare namespace $ {
+    /**
+     * BuilderUI design tokens — CSS variables in --bog_builderui_*.
+     * Used in .view.css.ts via $bog_builderui_tokens.text, $bog_builderui_tokens.back, etc.
+     */
+    const $bog_builderui_tokens: Record<"line" | "text" | "field" | "current" | "focus" | "hover" | "back" | "card" | "special" | "control" | "shade" | "font_body" | "font_head" | "radius", $mol_style_func<"var", unknown>>;
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_div extends $mol_view {
+	}
+	
+}
+
+//# sourceMappingURL=div.view.tree.d.ts.map
+/** @see $bog_builderui_tokens */
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_card extends $bog_builderui_div {
+	}
+	
+}
+
+//# sourceMappingURL=card.view.tree.d.ts.map
+/** @see $bog_builderui_tokens */
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_field extends $mol_string {
+		minimal_height( ): number
+	}
+	
+}
+
+//# sourceMappingURL=field.view.tree.d.ts.map
+/** @see $bog_builderui_tokens */
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_chart extends $mol_chart {
+	}
+	
+}
+
+//# sourceMappingURL=chart.view.tree.d.ts.map
+/** @see $bog_builderui_tokens */
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_select extends $mol_select {
+	}
+	
+}
+
+//# sourceMappingURL=select.view.tree.d.ts.map
+/** @see $bog_builderui_tokens */
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $mol_pop_over extends $mol_pop {
+		hovered( next?: boolean ): boolean
+		event_show( next?: any ): any
+		event_hide( next?: any ): any
+		showed( ): ReturnType< $mol_pop_over['hovered'] >
+		attr( ): ({ 
+			'tabindex': number,
+		})  & ReturnType< $mol_pop['attr'] >
+		event( ): ({ 
+			mouseenter( next?: ReturnType< $mol_pop_over['event_show'] > ): ReturnType< $mol_pop_over['event_show'] >,
+			mouseleave( next?: ReturnType< $mol_pop_over['event_hide'] > ): ReturnType< $mol_pop_over['event_hide'] >,
+		})  & ReturnType< $mol_pop['event'] >
+	}
+	
+}
+
+//# sourceMappingURL=over.view.tree.d.ts.map
+declare namespace $.$$ {
+    /**
+     * Bubble that can be shown anchored to Anchor element.
+     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_pop_over_demo
+     */
+    class $mol_pop_over extends $.$mol_pop_over {
+        event_show(event?: MouseEvent): void;
+        event_hide(event?: MouseEvent): void;
+        showed(): boolean;
+    }
+}
+
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_tooltip extends $mol_pop_over {
+	}
+	
+}
+
+//# sourceMappingURL=tooltip.view.tree.d.ts.map
+declare namespace $ {
+}
+
+declare namespace $ {
+
+	export class $bog_builderui_skin extends $mol_plugin {
+		lights( ): string
+		base( ): string
+		accent( ): string
+		chart( ): string
+		radius( ): string
+		font_body( ): string
+		font_head( ): string
+		attr( ): ({ 
+			'bog_builderui_lights': ReturnType< $bog_builderui_skin['lights'] >,
+			'bog_builderui_base': ReturnType< $bog_builderui_skin['base'] >,
+			'bog_builderui_theme': ReturnType< $bog_builderui_skin['accent'] >,
+			'bog_builderui_chart': ReturnType< $bog_builderui_skin['chart'] >,
+			'bog_builderui_radius': ReturnType< $bog_builderui_skin['radius'] >,
+			'bog_builderui_font_body': ReturnType< $bog_builderui_skin['font_body'] >,
+			'bog_builderui_font_head': ReturnType< $bog_builderui_skin['font_head'] >,
+		}) 
+	}
+	
+}
+
+//# sourceMappingURL=skin.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $bog_builderui_skin extends $.$bog_builderui_skin {
+        static ios_zoom_fixed: WeakSet<object>;
+        ios_zoom_fix(): void;
+        auto(): any;
+    }
+}
+
+declare namespace $ {
+
+	type $bog_demo_select_set__title_bog_demo_select_1 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $bog_demo_select_set['title'] >
+	>
+	type $bog_demo_select_set__title_bog_demo_select_2 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $bog_demo_select_set['title'] >
+	>
+	type $bog_demo_select_set__skinned_bog_demo_select_3 = $mol_type_enforce<
+		boolean
+		,
+		ReturnType< $bog_demo_select_set['skinned'] >
+	>
+	export class $bog_demo_select extends $mol_example_large {
+		Plain( ): $bog_demo_select_set
+		Skinned( ): $bog_demo_select_set
+		title( ): string
+		sub( ): readonly(any)[]
+		tags( ): readonly(any)[]
+		aspects( ): readonly(any)[]
+	}
+	
+	type $mol_view__sub_bog_demo_select_set_1 = $mol_type_enforce<
+		readonly(any)[]
+		,
+		ReturnType< $mol_view['sub'] >
+	>
+	type $mol_select__dictionary_bog_demo_select_set_2 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['options'] >
+		,
+		ReturnType< $mol_select['dictionary'] >
+	>
+	type $mol_form_field__name_bog_demo_select_set_3 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_form_field['name'] >
+	>
+	type $mol_form_field__Content_bog_demo_select_set_4 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['Original'] >
+		,
+		ReturnType< $mol_form_field['Content'] >
+	>
+	type $bog_demo_select_inherit__dictionary_bog_demo_select_set_5 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['options'] >
+		,
+		ReturnType< $bog_demo_select_inherit['dictionary'] >
+	>
+	type $mol_form_field__name_bog_demo_select_set_6 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_form_field['name'] >
+	>
+	type $mol_form_field__Content_bog_demo_select_set_7 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['Inherit'] >
+		,
+		ReturnType< $mol_form_field['Content'] >
+	>
+	type $bog_demo_select_none__dictionary_bog_demo_select_set_8 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['options'] >
+		,
+		ReturnType< $bog_demo_select_none['dictionary'] >
+	>
+	type $mol_form_field__name_bog_demo_select_set_9 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_form_field['name'] >
+	>
+	type $mol_form_field__Content_bog_demo_select_set_10 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['None'] >
+		,
+		ReturnType< $mol_form_field['Content'] >
+	>
+	type $bog_demo_select_flat__dictionary_bog_demo_select_set_11 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['options'] >
+		,
+		ReturnType< $bog_demo_select_flat['dictionary'] >
+	>
+	type $mol_form_field__name_bog_demo_select_set_12 = $mol_type_enforce<
+		string
+		,
+		ReturnType< $mol_form_field['name'] >
+	>
+	type $mol_form_field__Content_bog_demo_select_set_13 = $mol_type_enforce<
+		ReturnType< $bog_demo_select_set['Flat'] >
+		,
+		ReturnType< $mol_form_field['Content'] >
+	>
+	export class $bog_demo_select_set extends $mol_list {
+		Title( ): $mol_view
+		options( ): Record<string, any>
+		Original( ): $mol_select
+		Original_field( ): $mol_form_field
+		Inherit( ): $bog_demo_select_inherit
+		Inherit_field( ): $mol_form_field
+		None( ): $bog_demo_select_none
+		None_field( ): $mol_form_field
+		Flat( ): $bog_demo_select_flat
+		Flat_field( ): $mol_form_field
+		title( ): string
+		skinned( ): boolean
+		Skin( ): $bog_builderui_skin
+		rows( ): readonly(any)[]
+	}
+	
+	export class $bog_demo_select_inherit extends $mol_select {
+	}
+	
+	export class $bog_demo_select_none extends $mol_select {
+	}
+	
+	export class $bog_demo_select_flat extends $mol_select {
+		bubble_content( ): readonly(any)[]
+	}
+	
+}
+
+//# sourceMappingURL=select.view.tree.d.ts.map
+declare namespace $.$$ {
+    class $bog_demo_select_set extends $.$bog_demo_select_set {
+        plugins(): readonly $mol_view[];
+        options(): {
+            [k: string]: string;
+        };
+    }
+}
+
+declare namespace $.$$ {
+}
+
+declare namespace $ {
 
 	export class $mol_svg_line extends $mol_svg {
 		from( ): readonly(any)[]
@@ -44494,14 +46005,6 @@ declare namespace $.$$ {
         pos_x(): any;
         pos_y(): any;
     }
-}
-
-declare namespace $ {
-    /**
-     * BuilderUI design tokens — CSS variables in --bog_builderui_*.
-     * Used in .view.css.ts via $bog_builderui_tokens.text, $bog_builderui_tokens.back, etc.
-     */
-    const $bog_builderui_tokens: Record<"line" | "text" | "field" | "current" | "hover" | "back" | "card" | "special" | "control" | "shade" | "focus" | "font_body" | "font_head" | "radius", $mol_style_func<"var", unknown>>;
 }
 
 declare namespace $ {
@@ -45211,9 +46714,12 @@ declare namespace $.$$ {
         edge_endpoint(id: string): boolean;
         active_node_hood(): Set<string> | null;
         node_opacity(id: string): "1" | "0.12";
-        hover_timer: any;
+        hover_timer: {
+            destructor(): void;
+        } | null;
         readonly HOVER_DWELL_MS = 200;
         hover_after(fire: () => void): void;
+        hover_cancel(): void;
         hover_enter(id: string): null;
         hover_leave(): null;
         edge_by_id(): Record<string, GraphEdge>;
@@ -45285,112 +46791,6 @@ declare namespace $.$$ {
 }
 
 /** @see $bog_builderui_tokens */
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $bog_builderui_div extends $mol_view {
-	}
-	
-}
-
-//# sourceMappingURL=div.view.tree.d.ts.map
-/** @see $bog_builderui_tokens */
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $bog_builderui_card extends $bog_builderui_div {
-	}
-	
-}
-
-//# sourceMappingURL=card.view.tree.d.ts.map
-/** @see $bog_builderui_tokens */
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $bog_builderui_field extends $mol_string {
-		minimal_height( ): number
-	}
-	
-}
-
-//# sourceMappingURL=field.view.tree.d.ts.map
-/** @see $bog_builderui_tokens */
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $bog_builderui_chart extends $mol_chart {
-	}
-	
-}
-
-//# sourceMappingURL=chart.view.tree.d.ts.map
-/** @see $bog_builderui_tokens */
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $bog_builderui_select extends $mol_select {
-	}
-	
-}
-
-//# sourceMappingURL=select.view.tree.d.ts.map
-/** @see $bog_builderui_tokens */
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $mol_pop_over extends $mol_pop {
-		hovered( next?: boolean ): boolean
-		event_show( next?: any ): any
-		event_hide( next?: any ): any
-		showed( ): ReturnType< $mol_pop_over['hovered'] >
-		attr( ): ({ 
-			'tabindex': number,
-		})  & ReturnType< $mol_pop['attr'] >
-		event( ): ({ 
-			mouseenter( next?: ReturnType< $mol_pop_over['event_show'] > ): ReturnType< $mol_pop_over['event_show'] >,
-			mouseleave( next?: ReturnType< $mol_pop_over['event_hide'] > ): ReturnType< $mol_pop_over['event_hide'] >,
-		})  & ReturnType< $mol_pop['event'] >
-	}
-	
-}
-
-//# sourceMappingURL=over.view.tree.d.ts.map
-declare namespace $.$$ {
-    /**
-     * Bubble that can be shown anchored to Anchor element.
-     * @see https://mol.hyoo.ru/#!section=demos/demo=mol_pop_over_demo
-     */
-    class $mol_pop_over extends $.$mol_pop_over {
-        event_show(event?: MouseEvent): void;
-        event_hide(event?: MouseEvent): void;
-        showed(): boolean;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-
-	export class $bog_builderui_tooltip extends $mol_pop_over {
-	}
-	
-}
-
-//# sourceMappingURL=tooltip.view.tree.d.ts.map
 declare namespace $ {
 }
 
@@ -45627,11 +47027,13 @@ declare namespace $.$raggu_web_front_api_ragu {
                  * Engine
                  * @enum {string}
                  */
-                engine: "local" | "naive" | "mix" | "keyword";
+                engine: "local" | "global" | "naive" | "mix";
                 /** Top K */
                 top_k: number;
                 /** Rerank */
                 rerank: boolean;
+                /** Rerank Error */
+                rerank_error?: string | null;
                 query_plan?: components["schemas"]["TraceQueryPlan"] | null;
                 /** Entities */
                 entities?: components["schemas"]["TraceEntity"][];
@@ -45642,6 +47044,7 @@ declare namespace $.$raggu_web_front_api_ragu {
                 /** Communities */
                 communities?: components["schemas"]["TraceCommunity"][];
                 timings: components["schemas"]["TraceTimings"];
+                usage?: components["schemas"]["TraceUsage"] | null;
                 energy: components["schemas"]["TraceEnergy"];
                 highlight: components["schemas"]["GraphHighlight"];
             };
@@ -46186,6 +47589,20 @@ declare namespace $.$raggu_web_front_api_ragu {
                 /** Strength */
                 strength: number;
             };
+            /** TraceStageUsage */
+            TraceStageUsage: {
+                /**
+                 * Stage
+                 * @example mix
+                 */
+                stage: string;
+                /** Calls */
+                calls: number;
+                /** Prompt Tokens */
+                prompt_tokens: number;
+                /** Completion Tokens */
+                completion_tokens: number;
+            };
             /** TraceTimings */
             TraceTimings: {
                 /** Retrieval Ms */
@@ -46194,6 +47611,37 @@ declare namespace $.$raggu_web_front_api_ragu {
                 generation_ms: number;
                 /** Total Ms */
                 total_ms: number;
+            };
+            /** TraceUsage */
+            TraceUsage: {
+                /**
+                 * Estimated
+                 * @default true
+                 */
+                estimated: boolean;
+                /** Calls */
+                calls: number;
+                /** Prompt Tokens */
+                prompt_tokens: number;
+                /** Completion Tokens */
+                completion_tokens: number;
+                /** Total Tokens */
+                total_tokens: number;
+                /** Stages */
+                stages?: components["schemas"]["TraceStageUsage"][];
+                /** Cost */
+                cost: number;
+                /**
+                 * Currency
+                 * @default
+                 * @example ₽
+                 */
+                currency: string;
+                /**
+                 * Priced
+                 * @description Whether token prices are configured at all
+                 */
+                priced: boolean;
             };
             /** ValidationError */
             ValidationError: {

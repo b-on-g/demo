@@ -21,10 +21,13 @@ $mol_theme_auto $mol_plugin
 	light \$mol_theme_light
 	attr * mol_theme <= theme <= dark \$mol_theme_dark
 
-$mol_hotkey $mol_plugin
+$mol_hotkey2 $mol_plugin
 	event *
 		^
 		keydown? <=> keydown? null
+	action *
+
+$mol_hotkey $mol_hotkey2
 	key *
 	mod_ctrl false
 	mod_alt false
@@ -75,7 +78,8 @@ $mol_pop $mol_view
 	showed? false
 	align_vert \
 	align_hor \
-	align \bottom_center
+	direction \ltr
+	align_enriched <= align \bottom_center
 	prefer \vert
 	auto /
 		<= bubble null
@@ -728,15 +732,17 @@ $mol_text $mol_list
 	Paragraph* $mol_paragraph
 		sub <= block_content* /
 	Quote* $mol_text
-		uri_resolve* <= uri_resolve* \
 		text <= quote_text* \
-		highlight <= highlight \
 		auto_scroll null
-	List* $mol_text_list
+		highlight <= highlight \
 		uri_resolve* <= uri_resolve* \
+		code_sidebar_showed <= code_sidebar_showed true
+	List* $mol_text_list
 		type <= list_type* \-
 		text <= list_text* \
 		highlight <= highlight \
+		uri_resolve* <= uri_resolve* \
+		code_sidebar_showed <= code_sidebar_showed true
 	item_index* 0
 	Header* $mol_text_header
 		minimal_height 40
@@ -748,7 +754,7 @@ $mol_text $mol_list
 		row_themes <= pre_themes* /string
 		highlight <= highlight \
 		uri_resolve* <= uri_resolve* \
-		sidebar_showed <= pre_sidebar_showed <= code_sidebar_showed true
+		sidebar_showed <= code_sidebar_showed true
 	Cut* $mol_view dom_name \hr
 	- \Table
 	Table* $mol_grid
@@ -758,9 +764,10 @@ $mol_text $mol_list
 		cells <= table_cells* /
 	Table_cell* $mol_text
 		auto_scroll null
+		text <= table_cell_text* \
 		highlight <= highlight \
 		uri_resolve* <= uri_resolve* \
-		text <= table_cell_text* \
+		code_sidebar_showed <= code_sidebar_showed true
 	- \Grid
 	Grid* $mol_grid
 		rows <= grid_rows* /
@@ -768,9 +775,10 @@ $mol_text $mol_list
 		cells <= grid_cells* /
 	Grid_cell* $mol_text
 		auto_scroll null
+		text <= grid_cell_text* \
 		highlight <= highlight \
 		uri_resolve* <= uri_resolve* \
-		text <= grid_cell_text* \
+		code_sidebar_showed <= code_sidebar_showed true
 	- \Lines
 	String* $mol_dimmer
 		dom_name \span
@@ -800,9 +808,15 @@ $mol_text $mol_list
 		label /
 			<= Spoiler_label* $mol_text
 				text <= spoiler_label* \
+				highlight <= highlight \
+				uri_resolve* <= uri_resolve* \
+				code_sidebar_showed <= code_sidebar_showed true
 		content /
 			<= Spoiler_content* $mol_text
 				text <= spoiler_content* \
+				highlight <= highlight \
+				uri_resolve* <= uri_resolve* \
+				code_sidebar_showed <= code_sidebar_showed true
 
 $mol_text_header $mol_paragraph
 	level 1
@@ -951,6 +965,7 @@ $mol_select $mol_pick
 	Option_row* $mol_button_minor
 		enabled <= enabled true
 		event_click? <=> event_select*? null
+		hint <= option_hint* null
 		sub <= option_content* /
 			<= Option_label* $mol_dimmer
 				haystack <= option_label* \
@@ -1064,13 +1079,19 @@ $bog_theme_toggle $mol_pop
 			theme_auto <= theme_auto
 			close? <=> picker_close? null
 
-$mol_icon_chevron_left $mol_icon path \M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z
+$mol_icon_menu $mol_icon path \M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z
 
-$mol_icon_chevron_right $mol_icon path \M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z
+$mol_icon_menu_down $mol_icon path \M7,10L12,15L17,10H7Z
+
+$mol_icon_menu_down_outline $mol_icon path \M18,9V10.5L12,16.5L6,10.5V9H18M12,13.67L14.67,11H9.33L12,13.67Z
+
+$mol_icon_menu_up $mol_icon path \M7,15L12,10L17,15H7Z
+
+$mol_icon_menu_up_outline $mol_icon path \M18,16V14.5L12,8.5L6,14.5V16H18M12,11.33L14.67,14H9.33L12,11.33Z
 
 $mol_number $mol_view
-	precision_view <= precision 1
-	precision_change <= precision 1
+	precision_view <= precision 0
+	precision_change <= precision 0
 	boost 10
 	value_min -Infinity
 	value_max +Infinity
@@ -1084,10 +1105,6 @@ $mol_number $mol_view
 				pageDown? <=> event_dec_boost? null
 				pageUp? <=> event_inc_boost? null
 	sub /
-		<= Dec $mol_button_minor
-			event_click? <=> event_dec? null
-			enabled <= dec_enabled <= enabled
-			sub / <= dec_icon $mol_icon_chevron_left
 		<= String $mol_string
 			- \ we don't want native number controls in mobile devices
 			- \ https://stackoverflow.com/questions/3790935/can-i-hide-the-html5-number-input-s-spin-box
@@ -1097,12 +1114,254 @@ $mol_number $mol_view
 			hint <= hint \ 
 			enabled <= string_enabled <= enabled
 			submit? <=> submit? null
+			selection? <=> selection? /number
+		<= Dec $mol_button_minor
+			event_click? <=> event_dec? null
+			enabled <= dec_enabled <= enabled
+			sub / <= dec_icon $mol_icon_menu_down_outline
 		<= Inc $mol_button_minor
 			event_click? <=> event_inc? null
 			enabled <= inc_enabled <= enabled
-			sub / <= inc_icon $mol_icon_chevron_right
+			sub / <= inc_icon $mol_icon_menu_up_outline
 
 $mol_row $mol_view
+
+$mol_touch $mol_plugin
+	start_zoom? 0
+	start_distance? 0
+	zoom? 1
+	allow_draw true
+	allow_pan true
+	allow_zoom true
+	action_type? \
+	action_point? $mol_vector_2d<number> /
+		NaN
+		NaN
+	-
+	start_pan? /
+		0
+		0
+	pan? $mol_vector_2d<number> /
+		0
+		0
+	pointer_center $mol_vector_2d<number> /
+		NaN
+		NaN
+	-
+	start_pos? null
+	swipe_precision 16
+	-
+	swipe_right? null
+	swipe_bottom? null
+	swipe_left? null
+	swipe_top? null
+	-
+	swipe_from_right? null
+	swipe_from_bottom? null
+	swipe_from_left? null
+	swipe_from_top? null
+	-
+	swipe_to_right? null
+	swipe_to_bottom? null
+	swipe_to_left? null
+	swipe_to_top? null
+	-
+	draw_start? null
+	draw? null
+	draw_end? null
+	-
+	style *
+		^
+		touch-action \none
+		overscroll-behavior \none
+	-
+	event *
+		^
+		pointerdown? <=> event_start? null
+		pointermove? <=> event_move? null
+		pointerup? <=> event_end? null
+		pointerleave? <=> event_leave? null
+		wheel? <=> event_wheel? null
+
+$mol_plot_pane $mol_svg_root
+	aspect \none
+	-
+	hue_base? +NaN
+	hue_shift? 111
+	-
+	gap_hor 48
+	gap_vert 24
+	gap_left <= gap_hor
+	gap_right <= gap_hor
+	gap_top <= gap_vert
+	gap_bottom <= gap_vert
+	gap $mol_vector_2d<$mol_vector_range<number>> /
+		<= gap_x $mol_vector_range<number> /
+			<= gap_left
+			<= gap_right
+		<= gap_y $mol_vector_range<number> /
+			<= gap_bottom
+			<= gap_top
+	-
+	shift_limit $mol_vector_2d<$mol_vector_range<number>> /
+		<= shift_limit_x $mol_vector_range<number> /
+			0
+			0
+		<= shift_limit_y $mol_vector_range<number> /
+			0
+			0
+	shift_default $mol_vector_2d<number> /
+		0
+		0
+	shift? $mol_vector_2d<number> /
+		0
+		0
+	scale_limit $mol_vector_2d<$mol_vector_range<number>> /
+		<= scale_limit_x $mol_vector_range<number> /
+			0
+			Infinity
+		<= scale_limit_y $mol_vector_range<number> /
+			0
+			-Infinity
+	scale_default $mol_vector_2d<number> /
+		0
+		0
+	scale? $mol_vector_2d<number> /
+		1
+		-1
+	scale_x? 1
+	scale_y? -1
+	size $mol_vector_2d<number> /
+		0
+		0
+	size_real $mol_vector_2d<number> /
+		1
+		1
+	dimensions $mol_vector_2d<$mol_vector_range<number>> /
+		<= dimensions_x $mol_vector_range<number> /
+			Infinity
+			-Infinity
+		<= dimensions_y $mol_vector_range<number> /
+			Infinity
+			-Infinity
+	dimensions_viewport $mol_vector_2d<$mol_vector_range<number>> /
+		<= dimensions_viewport_x $mol_vector_range<number> /
+			Infinity
+			-Infinity
+		<= dimensions_viewport_y $mol_vector_range<number> /
+			Infinity
+			-Infinity
+	-
+	sub <= graphs_sorted /$mol_svg
+	graphs_colored <= graphs_visible <= graphs_positioned <= graphs /$mol_plot_graph
+	-
+	plugins /
+		^
+		<= Touch $mol_touch
+			zoom? <=> zoom? 1
+			pan? <=> shift?
+			pointer_center => cursor_position
+			allow_draw <= allow_draw true
+			allow_pan <= allow_pan true
+			allow_zoom <= allow_zoom true
+			action_type => action_type
+			action_point => action_point
+			draw_start? <=> draw_start? null
+			draw? <=> draw? null
+			draw_end? <=> draw_end? null
+	- event *
+		^
+		dblclick? <=> reset? null
+
+$mol_svg_group $mol_svg
+	dom_name \g
+
+$mol_svg_title $mol_svg
+	dom_name \title
+	sub /
+		<= title
+
+$mol_plot_graph $mol_svg_group
+	series_x /number
+	series_y /number
+	-
+	attr *
+		^
+		mol_plot_graph_type <= type \solid
+	-
+	style *
+		^
+		color <= color \
+	-
+	viewport $mol_vector_2d<$mol_vector_range<number>> /
+		<= viewport_x $mol_vector_range<number> /
+			Infinity
+			-Infinity
+		<= viewport_y $mol_vector_range<number> /
+			Infinity
+			-Infinity
+	shift /number
+		0
+		0
+	scale /number
+		1
+		1
+	cursor_position $mol_vector_2d<number> /
+		NaN
+		NaN
+	dimensions_pane $mol_vector_2d<$mol_vector_range<number>> /
+		<= dimensions_pane_x $mol_vector_range<number> /
+			Infinity
+			-Infinity
+		<= dimensions_pane_y $mol_vector_range<number> /
+			Infinity
+			-Infinity
+	dimensions $mol_vector_2d<$mol_vector_range<number>> /
+		<= dimensions_x $mol_vector_range<number> /
+			Infinity
+			-Infinity
+		<= dimensions_y $mol_vector_range<number> /
+			Infinity
+			-Infinity
+	size_real $mol_vector_2d<number> /
+		0
+		0
+	gap $mol_vector_2d<$mol_vector_range<number>> /
+		<= gap_x $mol_vector_range<number> /
+			0
+			0
+		<= gap_y $mol_vector_range<number> /
+			0
+			0
+	repos_x* 0
+	repos_y* 0
+	indexes /number
+	points /readonly(number)[]
+	front /$mol_svg
+	back /$mol_svg
+	Hint $mol_svg_title
+		title <= hint <= title \
+	hue? +NaN
+	Sample null
+
+$mol_plot_graph_sample $mol_view
+	attr *
+		^
+		mol_plot_graph_type <= type \solid
+	style *
+		^
+		color <= color \black
+
+$mol_plot_bar $mol_plot_graph
+	style *
+		^
+		stroke-width <= stroke_width \1rem
+	sub /
+		<= Hint
+		<= Curve $mol_svg_path
+			geometry <= curve \
+	Sample $mol_plot_graph_sample
+		color <= color
 
 $mol_button_major $mol_button_minor
 	theme \$mol_theme_base
@@ -1157,6 +1416,25 @@ $bog_theme_demo $mol_example_large
 				Content <= Hue_spread $mol_number
 					value? <=> hue_spread? 90
 					precision_change 15
+			<= Sat_field $mol_form_field
+				name \Bar saturation
+				Content <= Sat $mol_number
+					value? <=> sat? 80
+					precision_change 10
+			<= Lig_field $mol_form_field
+				name \Bar lightness
+				Content <= Lig $mol_number
+					value? <=> lig? 60
+					precision_change 10
+		<= Plot $mol_plot_pane
+			hue_base <= hue
+			hue_shift <= hue_spread
+			graphs <= bars /
+				<= Bar* $bog_theme_demo_bar
+					series_x <= bar_x* /number
+					series_y <= bar_y* /number
+					sat <= sat
+					lig <= lig
 		<= Scroll $mol_scroll sub /
 			<= Cases $bog_theme_demo_case
 				title \Current light
@@ -1191,6 +1469,10 @@ $bog_theme_demo_case $mol_view
 			<= Special $mol_button_copy title \$mol_theme.special
 		^ inner
 	inner /
+
+$bog_theme_demo_bar $mol_plot_bar
+	sat? +NaN
+	lig? +NaN
 
 $bog_qr $mol_svg_root
 	uri \
@@ -1382,6 +1664,9 @@ $mol_textarea $mol_stack
 			submit? <=> submit? null
 			submit_with_ctrl <= submit_with_ctrl true
 		<= View $mol_text_code
+			attr *
+				^
+				inert \
 			text <= value
 			render_visible_only false
 			row_numb* <= row_numb* 0
@@ -1488,8 +1773,21 @@ $bog_feedback_demo $mol_example_small
 $bog_feedback2_form $mol_page
 	Head null
 	feedback_id \
-	registry_link \c0FEYfG8_tUFJEKfo
+	registry_link \
 	title @ \Feedback ( one per user )
+	prompt_title @ \**Tell us what you think:**
+	prompt_like @ \- What did you **like**?
+	prompt_better @ \- What could be done **better**?
+	prompt_future @ \- Any **suggestions** for the future?
+	submit_send @ \Send feedback
+	submit_update @ \Update feedback
+	anonymous @ \Anonymous
+	reply_send @ \Send reply
+	reply_update @ \Update reply
+	reply_open @ \Reply
+	reply_cancel @ \Cancel
+	reply_edit @ \Edit reply
+	not_ready @ \Feedback storage is not ready yet, try again
 	tools /
 		<= Close null
 	body /
@@ -1533,8 +1831,6 @@ $bog_feedback2_form $mol_page
 									click? <=> entry_row_reply_toggle*? null
 	Not_configured $mol_status
 		message @ \Form not yet configured
-	Waiting $mol_paragraph
-		title <= waiting_title @ \Waiting…
 
 $bog_feedback2_demo $mol_example_small
 	title \Feedback
@@ -1595,6 +1891,139 @@ $bog_wikilive_logo_demo $mol_example_small
 	aspects /
 		\UI/Logo
 
+$bog_builderui_div $mol_view
+
+$bog_builderui_card $bog_builderui_div
+
+$bog_builderui_field $mol_string
+	minimal_height 36
+
+$mol_gallery $mol_view
+	sub <= items /$mol_view
+	Side* $mol_gallery
+		style *
+			flexGrow <= side_size* \1
+		items <= side_items* /$mol_view
+
+$mol_chart_legend $mol_scroll
+	graphs /$mol_plot_graph
+	graphs_front /$mol_plot_graph
+	sub /
+		<= Gallery $mol_gallery items <= graph_legends /$mol_view
+	-
+	Graph_legend* $mol_view
+		sub /
+			<= Graph_sample_box* $mol_view
+				sub /
+					<= Graph_sample* null
+			<= Graph_title* $mol_view
+				sub /
+					<= graph_title* \
+
+$mol_chart $mol_view
+	gap_hor 48
+	gap_vert 24
+	gap_left <= gap_hor
+	gap_right <= gap_hor
+	gap_bottom <= gap_vert
+	gap_top <= gap_vert
+	graphs /$mol_plot_graph
+	sub /
+		<= Legend $mol_chart_legend
+			graphs <= graphs_colored
+		<= Plot $mol_plot_pane
+			scale_x? => zoom?
+			zoom? <=> zoom?
+			gap_left <= gap_left
+			gap_right <= gap_right
+			gap_bottom <= gap_bottom
+			gap_top <= gap_top
+			graphs <= graphs
+			graphs_colored => graphs_colored
+			hue_base <= hue_base 210
+			hue_shift <= hue_shift 163
+
+$bog_builderui_chart $mol_chart
+
+$bog_builderui_select $mol_select
+
+$mol_pop_over $mol_pop
+	showed <= hovered? false
+	attr *
+		^
+		tabindex 0
+	event *
+		^
+		mouseenter? <=> event_show? null
+		mouseleave? <=> event_hide? null
+
+$bog_builderui_tooltip $mol_pop_over
+
+$bog_builderui_skin $mol_plugin
+	lights \system
+	base \slate
+	accent \sky
+	chart \blue
+	radius \medium
+	font_body \inter
+	font_head \inter
+	attr *
+		bog_builderui_lights <= lights
+		bog_builderui_base <= base
+		bog_builderui_theme <= accent
+		bog_builderui_chart <= chart
+		bog_builderui_radius <= radius
+		bog_builderui_font_body <= font_body
+		bog_builderui_font_head <= font_head
+
+$bog_demo_select $mol_example_large
+	title \$mol_select: варианты Bubble_pane
+	sub /
+		<= Plain $bog_demo_select_set
+			title \Чистый $mol
+		<= Skinned $bog_demo_select_set
+			title \Скин $bog_builderui_skin
+			skinned true
+	tags /
+		\select
+		\pop
+		\ios
+	aspects /
+		\Widget/Control
+
+$bog_demo_select_set $mol_list
+	title \
+	skinned false
+	Skin $bog_builderui_skin
+	rows /
+		<= Title $mol_view
+			sub / <= title
+		<= Original_field $mol_form_field
+			name \Как в $mol: max-height 100%
+			Content <= Original $mol_select
+				dictionary <= options *
+		<= Inherit_field $mol_form_field
+			name \max-height: inherit
+			Content <= Inherit $bog_demo_select_inherit
+				dictionary <= options
+		<= None_field $mol_form_field
+			name \max-height: none
+			Content <= None $bog_demo_select_none
+				dictionary <= options
+		<= Flat_field $mol_form_field
+			name \Без Bubble_pane
+			Content <= Flat $bog_demo_select_flat
+				dictionary <= options
+
+$bog_demo_select_inherit $mol_select
+
+$bog_demo_select_none $mol_select
+
+$bog_demo_select_flat $mol_select
+	bubble_content /
+		<= Filter
+		<= Menu
+
 $mol_svg_line $mol_svg
 	dom_name \line
 	pos /
@@ -1606,9 +2035,6 @@ $mol_svg_line $mol_svg
 		y1 <= from_y \
 		x2 <= to_x \
 		y2 <= to_y \
-
-$mol_svg_group $mol_svg
-	dom_name \g
 
 $mol_svg_text $mol_svg
 	dom_name \text
@@ -1948,297 +2374,6 @@ $raggu_web_front_explorer_forcegraph_demo_row $mol_view
 					value_max <= value_max
 		<= Info $mol_view
 			sub / <= info
-
-$bog_builderui_div $mol_view
-
-$bog_builderui_card $bog_builderui_div
-
-$bog_builderui_field $mol_string
-	minimal_height 36
-
-$mol_gallery $mol_view
-	sub <= items /$mol_view
-	Side* $mol_gallery
-		style *
-			flexGrow <= side_size* \1
-		items <= side_items* /$mol_view
-
-$mol_chart_legend $mol_scroll
-	graphs /$mol_plot_graph
-	graphs_front /$mol_plot_graph
-	sub /
-		<= Gallery $mol_gallery items <= graph_legends /$mol_view
-	-
-	Graph_legend* $mol_view
-		sub /
-			<= Graph_sample_box* $mol_view
-				sub /
-					<= Graph_sample* null
-			<= Graph_title* $mol_view
-				sub /
-					<= graph_title* \
-
-$mol_svg_title $mol_svg
-	dom_name \title
-	sub /
-		<= title
-
-$mol_plot_graph $mol_svg_group
-	series_x /number
-	series_y /number
-	-
-	attr *
-		^
-		mol_plot_graph_type <= type \solid
-	-
-	style *
-		^
-		color <= color \
-	-
-	viewport $mol_vector_2d<$mol_vector_range<number>> /
-		<= viewport_x $mol_vector_range<number> /
-			Infinity
-			-Infinity
-		<= viewport_y $mol_vector_range<number> /
-			Infinity
-			-Infinity
-	shift /number
-		0
-		0
-	scale /number
-		1
-		1
-	cursor_position $mol_vector_2d<number> /
-		NaN
-		NaN
-	dimensions_pane $mol_vector_2d<$mol_vector_range<number>> /
-		<= dimensions_pane_x $mol_vector_range<number> /
-			Infinity
-			-Infinity
-		<= dimensions_pane_y $mol_vector_range<number> /
-			Infinity
-			-Infinity
-	dimensions $mol_vector_2d<$mol_vector_range<number>> /
-		<= dimensions_x $mol_vector_range<number> /
-			Infinity
-			-Infinity
-		<= dimensions_y $mol_vector_range<number> /
-			Infinity
-			-Infinity
-	size_real $mol_vector_2d<number> /
-		0
-		0
-	gap $mol_vector_2d<$mol_vector_range<number>> /
-		<= gap_x $mol_vector_range<number> /
-			0
-			0
-		<= gap_y $mol_vector_range<number> /
-			0
-			0
-	repos_x* 0
-	repos_y* 0
-	indexes /number
-	points /readonly(number)[]
-	front /$mol_svg
-	back /$mol_svg
-	Hint $mol_svg_title
-		title <= hint <= title \
-	hue? +NaN
-	Sample null
-
-$mol_plot_graph_sample $mol_view
-	attr *
-		^
-		mol_plot_graph_type <= type \solid
-	style *
-		^
-		color <= color \black
-
-$mol_touch $mol_plugin
-	start_zoom? 0
-	start_distance? 0
-	zoom? 1
-	allow_draw true
-	allow_pan true
-	allow_zoom true
-	action_type? \
-	action_point? $mol_vector_2d<number> /
-		NaN
-		NaN
-	-
-	start_pan? /
-		0
-		0
-	pan? $mol_vector_2d<number> /
-		0
-		0
-	pointer_center $mol_vector_2d<number> /
-		NaN
-		NaN
-	-
-	start_pos? null
-	swipe_precision 16
-	-
-	swipe_right? null
-	swipe_bottom? null
-	swipe_left? null
-	swipe_top? null
-	-
-	swipe_from_right? null
-	swipe_from_bottom? null
-	swipe_from_left? null
-	swipe_from_top? null
-	-
-	swipe_to_right? null
-	swipe_to_bottom? null
-	swipe_to_left? null
-	swipe_to_top? null
-	-
-	draw_start? null
-	draw? null
-	draw_end? null
-	-
-	style *
-		^
-		touch-action \none
-		overscroll-behavior \none
-	-
-	event *
-		^
-		pointerdown? <=> event_start? null
-		pointermove? <=> event_move? null
-		pointerup? <=> event_end? null
-		pointerleave? <=> event_leave? null
-		wheel? <=> event_wheel? null
-
-$mol_plot_pane $mol_svg_root
-	aspect \none
-	-
-	hue_base? +NaN
-	hue_shift? 111
-	-
-	gap_hor 48
-	gap_vert 24
-	gap_left <= gap_hor
-	gap_right <= gap_hor
-	gap_top <= gap_vert
-	gap_bottom <= gap_vert
-	gap $mol_vector_2d<$mol_vector_range<number>> /
-		<= gap_x $mol_vector_range<number> /
-			<= gap_left
-			<= gap_right
-		<= gap_y $mol_vector_range<number> /
-			<= gap_bottom
-			<= gap_top
-	-
-	shift_limit $mol_vector_2d<$mol_vector_range<number>> /
-		<= shift_limit_x $mol_vector_range<number> /
-			0
-			0
-		<= shift_limit_y $mol_vector_range<number> /
-			0
-			0
-	shift_default $mol_vector_2d<number> /
-		0
-		0
-	shift? $mol_vector_2d<number> /
-		0
-		0
-	scale_limit $mol_vector_2d<$mol_vector_range<number>> /
-		<= scale_limit_x $mol_vector_range<number> /
-			0
-			Infinity
-		<= scale_limit_y $mol_vector_range<number> /
-			0
-			-Infinity
-	scale_default $mol_vector_2d<number> /
-		0
-		0
-	scale? $mol_vector_2d<number> /
-		1
-		-1
-	scale_x? 1
-	scale_y? -1
-	size $mol_vector_2d<number> /
-		0
-		0
-	size_real $mol_vector_2d<number> /
-		1
-		1
-	dimensions $mol_vector_2d<$mol_vector_range<number>> /
-		<= dimensions_x $mol_vector_range<number> /
-			Infinity
-			-Infinity
-		<= dimensions_y $mol_vector_range<number> /
-			Infinity
-			-Infinity
-	dimensions_viewport $mol_vector_2d<$mol_vector_range<number>> /
-		<= dimensions_viewport_x $mol_vector_range<number> /
-			Infinity
-			-Infinity
-		<= dimensions_viewport_y $mol_vector_range<number> /
-			Infinity
-			-Infinity
-	-
-	sub <= graphs_sorted /$mol_svg
-	graphs_colored <= graphs_visible <= graphs_positioned <= graphs /$mol_plot_graph
-	-
-	plugins /
-		^
-		<= Touch $mol_touch
-			zoom? <=> zoom? 1
-			pan? <=> shift?
-			pointer_center => cursor_position
-			allow_draw <= allow_draw true
-			allow_pan <= allow_pan true
-			allow_zoom <= allow_zoom true
-			action_type => action_type
-			action_point => action_point
-			draw_start? <=> draw_start? null
-			draw? <=> draw? null
-			draw_end? <=> draw_end? null
-	- event *
-		^
-		dblclick? <=> reset? null
-
-$mol_chart $mol_view
-	gap_hor 48
-	gap_vert 24
-	gap_left <= gap_hor
-	gap_right <= gap_hor
-	gap_bottom <= gap_vert
-	gap_top <= gap_vert
-	graphs /$mol_plot_graph
-	sub /
-		<= Legend $mol_chart_legend
-			graphs <= graphs_colored
-		<= Plot $mol_plot_pane
-			scale_x? => zoom?
-			zoom? <=> zoom?
-			gap_left <= gap_left
-			gap_right <= gap_right
-			gap_bottom <= gap_bottom
-			gap_top <= gap_top
-			graphs <= graphs
-			graphs_colored => graphs_colored
-			hue_base <= hue_base 210
-			hue_shift <= hue_shift 163
-
-$bog_builderui_chart $mol_chart
-
-$bog_builderui_select $mol_select
-
-$mol_pop_over $mol_pop
-	showed <= hovered? false
-	attr *
-		^
-		tabindex 0
-	event *
-		^
-		mouseenter? <=> event_show? null
-		mouseleave? <=> event_hide? null
-
-$bog_builderui_tooltip $mol_pop_over
 
 $raggu_web_front_explorer $bog_builderui_div
 	dataset_id \
