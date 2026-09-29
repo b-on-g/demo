@@ -7,5 +7,6 @@ include \/bog/feedback2/demo
 include \/bog/langleak/demo
 include \/bog/wikilive/button/demo
 include \/bog/wikilive/logo/demo
+include \/bog/demo/select
 
 include \/raggu/web/front/explorer/forcegraph/demo

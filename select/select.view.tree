@@ -1,0 +1,47 @@
+$bog_demo_select $mol_example_large
+	title \$mol_select: варианты Bubble_pane
+	sub /
+		<= Plain $bog_demo_select_set
+			title \Чистый $mol
+		<= Skinned $bog_demo_select_set
+			title \Скин $bog_builderui_skin
+			skinned true
+	tags /
+		\select
+		\pop
+		\ios
+	aspects /
+		\Widget/Control
+
+$bog_demo_select_set $mol_list
+	title \
+	skinned false
+	Skin $bog_builderui_skin
+	rows /
+		<= Title $mol_view
+			sub / <= title
+		<= Original_field $mol_form_field
+			name \Как в $mol: max-height 100%
+			Content <= Original $mol_select
+				dictionary <= options *
+		<= Inherit_field $mol_form_field
+			name \max-height: inherit
+			Content <= Inherit $bog_demo_select_inherit
+				dictionary <= options
+		<= None_field $mol_form_field
+			name \max-height: none
+			Content <= None $bog_demo_select_none
+				dictionary <= options
+		<= Flat_field $mol_form_field
+			name \Без Bubble_pane
+			Content <= Flat $bog_demo_select_flat
+				dictionary <= options
+
+$bog_demo_select_inherit $mol_select
+
+$bog_demo_select_none $mol_select
+
+$bog_demo_select_flat $mol_select
+	bubble_content /
+		<= Filter
+		<= Menu
